@@ -4,6 +4,7 @@ import CurrentWeather from "./components/CurrentWeather";
 import WeatherStats from "./components/WeatherStats";
 import HourlyForecast from "./components/HourlyForecast";
 import WeeklyForecast from "./components/WeeklyForecast";
+import AirConditions from "./components/AirConditions";
 import LocationPermission from "./components/LocationPermission";
 import {
   ForecastTabs,
@@ -79,6 +80,7 @@ function App() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const toastIdRef = useRef(1);
   const severeAlertShownRef = useRef<string | null>(null);
+  const nativeNotifAskedRef = useRef(false);
 
   const pushToast = useCallback((message: string, kind: ToastKind = "info") => {
     const id = toastIdRef.current++;
@@ -87,6 +89,62 @@ function App() {
 
   const dismissToast = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const pushNativeNotification = useCallback(
+    (title: string, body: string) => {
+      if (typeof Notification === "undefined") return;
+      if (Notification.permission === "granted") {
+        try {
+          const n = new Notification(title, {
+            body,
+            icon: "/favicon.svg",
+            badge: "/favicon.svg",
+          });
+          n.onclick = () => {
+            window.focus();
+            n.close();
+          };
+          setTimeout(() => n.close(), 9000);
+        } catch {
+          // ignore
+        }
+      }
+    },
+    []
+  );
+
+  // Ask for native notification permission after user interacts with the page
+  useEffect(() => {
+    if (typeof Notification === "undefined") return;
+    if (nativeNotifAskedRef.current) return;
+    if (Notification.permission === "granted" || Notification.permission === "denied") {
+      nativeNotifAskedRef.current = true;
+      return;
+    }
+
+    const askOnce = async () => {
+      if (nativeNotifAskedRef.current) return;
+      nativeNotifAskedRef.current = true;
+      try {
+        await Notification.requestPermission();
+      } catch {
+        // ignore
+      }
+    };
+
+    const onFirstInteract = () => {
+      void askOnce();
+      window.removeEventListener("click", onFirstInteract);
+      window.removeEventListener("keydown", onFirstInteract);
+    };
+
+    window.addEventListener("click", onFirstInteract, { once: false });
+    window.addEventListener("keydown", onFirstInteract, { once: false });
+    return () => {
+      window.removeEventListener("click", onFirstInteract);
+      window.removeEventListener("keydown", onFirstInteract);
+    };
   }, []);
 
   // Apply theme attribute on the document root
@@ -217,17 +275,25 @@ function App() {
         updatedAt: Date.now(),
       });
 
-      // Severe weather alert push
+      // Severe weather alert push (toast + native notification)
       const alertMsg = getSevereAlert(weatherData.weather[0].main);
       if (alertMsg) {
         const alertKey = `${resolvedName}_${alertMsg}_${new Date().toDateString()}`;
         if (severeAlertShownRef.current !== alertKey) {
           severeAlertShownRef.current = alertKey;
           setTimeout(() => pushToast(alertMsg, "warning"), 900);
+          setTimeout(
+            () =>
+              pushNativeNotification(
+                `Weather alert · ${resolvedName}`,
+                alertMsg
+              ),
+            1100
+          );
         }
       }
     },
-    [pushToast, upsertSavedLocation, writeCache]
+    [pushNativeNotification, pushToast, upsertSavedLocation, writeCache]
   );
 
   const loadWeatherByCoords = useCallback(
@@ -494,16 +560,15 @@ function App() {
       />
 
       <div className="app">
-        <div className="phoneContainer">
-          <Header
-            city={city}
-            country={country}
-            onMenuClick={() => setDrawerOpen(true)}
-            onSearchClick={() => setSearchOpen(true)}
-            onSettingsClick={() => setSettingsOpen(true)}
-            isOffline={isOffline}
-            lastUpdated={lastUpdated}
-          />
+        <Header
+          city={city}
+          country={country}
+          onMenuClick={() => setDrawerOpen(true)}
+          onSearchClick={() => setSearchOpen(true)}
+          onSettingsClick={() => setSettingsOpen(true)}
+          isOffline={isOffline}
+          lastUpdated={lastUpdated}
+        />
 
           {loading && (
             <div className="loadingState">
@@ -555,9 +620,10 @@ function App() {
                   <WeeklyForecast forecast={forecast} unit={unit} />
                 )}
               </div>
+
+              <AirConditions weather={weather} forecast={forecast} unit={unit} />
             </>
           )}
-        </div>
       </div>
     </>
   );

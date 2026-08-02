@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import { searchCity } from "../services/weatherApi";
 
 export type ForecastTab = "hourly" | "daily";
 
@@ -8,7 +10,7 @@ interface ForecastTabsProps {
 }
 
 export const ForecastTabs = ({ active, onChange }: ForecastTabsProps) => {
-  const tabs: { id: ForecastTab; label: string; icon: JSX.Element }[] = [
+  const tabs: { id: ForecastTab; label: string; icon: ReactNode }[] = [
     {
       id: "hourly",
       label: "Hourly",
@@ -54,6 +56,14 @@ export const ForecastTabs = ({ active, onChange }: ForecastTabsProps) => {
   );
 };
 
+interface GeoSearchResult {
+  name: string;
+  country?: string;
+  state?: string;
+  lat: number;
+  lon: number;
+}
+
 interface SearchOverlayProps {
   open: boolean;
   onClose: () => void;
@@ -62,25 +72,82 @@ interface SearchOverlayProps {
 
 export const SearchOverlay = ({ open, onClose, onSelectCity }: SearchOverlayProps) => {
   const [query, setQuery] = useState("");
-  const suggestions = [
-    "Johannesburg, South Africa",
-    "Cape Town, South Africa",
-    "Mumbai, India",
-    "London, United Kingdom",
-    "New York, United States",
-    "Tokyo, Japan",
-    "Sydney, Australia",
-    "Paris, France",
-  ].filter((s) => s.toLowerCase().includes(query.toLowerCase()));
+  const [suggestions, setSuggestions] = useState<GeoSearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const debounceRef = useRef<number | undefined>(undefined);
+  const reqIdRef = useRef(0);
 
   useEffect(() => {
     if (!open) {
-      // Reset asynchronously to avoid synchronous setState within an effect body.
-      queueMicrotask(() => setQuery(""));
+      queueMicrotask(() => {
+        setQuery("");
+        setSuggestions([]);
+        setError("");
+        setLoading(false);
+      });
     }
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const trimmed = query.trim();
+    if (trimmed.length < 2) {
+      queueMicrotask(() => {
+        setSuggestions([]);
+        setError("");
+        setLoading(false);
+      });
+      return;
+    }
+
+    queueMicrotask(() => {
+      setLoading(true);
+      setError("");
+    });
+
+    const myReq = ++reqIdRef.current;
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+
+    debounceRef.current = window.setTimeout(async () => {
+      try {
+        const data = await searchCity(trimmed);
+        if (reqIdRef.current !== myReq) return;
+        setSuggestions(
+          (data as GeoSearchResult[]).filter(
+            (r, i, arr) =>
+              arr.findIndex(
+                (o) =>
+                  o.name.toLowerCase() === r.name.toLowerCase() &&
+                  (o.country ?? "") === (r.country ?? "") &&
+                  (o.state ?? "") === (r.state ?? "")
+              ) === i
+          )
+        );
+        setError("");
+      } catch {
+        if (reqIdRef.current !== myReq) return;
+        setSuggestions([]);
+        setError("Couldn't reach search — try again shortly.");
+      } finally {
+        if (reqIdRef.current === myReq) setLoading(false);
+      }
+    }, 350);
+
+    return () => {
+      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    };
+  }, [query, open]);
+
   if (!open) return null;
+
+  const regionDisplay = (r: GeoSearchResult) => {
+    const countryName = r.country
+      ? new Intl.DisplayNames(["en"], { type: "region" }).of(r.country) ?? r.country
+      : "";
+    const parts = [r.state, countryName].filter(Boolean);
+    return parts.join(", ");
+  };
 
   return (
     <div className="modalOverlay" onClick={onClose}>
@@ -90,10 +157,16 @@ export const SearchOverlay = ({ open, onClose, onSelectCity }: SearchOverlayProp
       >
         <div className="searchHeader">
           <div className="searchInputWrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            {loading ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="spinSvg">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            )}
             <input
               autoFocus
               value={query}
@@ -138,19 +211,41 @@ export const SearchOverlay = ({ open, onClose, onSelectCity }: SearchOverlayProp
               </button>
             </li>
           )}
-          {suggestions.map((s) => (
-            <li key={s}>
-              <button
-                className="suggestBtn"
-                onClick={() => {
-                  onSelectCity(s.split(",")[0].trim());
-                  onClose();
-                }}
-              >
-                📍 <span>{s}</span>
-              </button>
+          {error && (
+            <li className="suggestError">
+              <span>{error}</span>
             </li>
-          ))}
+          )}
+          {!error && loading && suggestions.length === 0 && query.trim().length >= 2 && (
+            <li className="suggestHint">
+              <span>Looking up locations…</span>
+            </li>
+          )}
+          {!error && !loading && suggestions.length === 0 && query.trim().length >= 2 && (
+            <li className="suggestHint">
+              <span>No locations found — try a different name.</span>
+            </li>
+          )}
+          {suggestions.map((r, idx) => {
+            const region = regionDisplay(r);
+            return (
+              <li key={`${r.lat}-${r.lon}-${idx}`}>
+                <button
+                  className="suggestBtn"
+                  onClick={() => {
+                    onSelectCity(r.name);
+                    onClose();
+                  }}
+                >
+                  📍{" "}
+                  <span className="suggestText">
+                    <strong>{r.name}</strong>
+                    {region && <small> · {region}</small>}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

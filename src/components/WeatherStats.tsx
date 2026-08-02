@@ -21,6 +21,22 @@ const WeatherStats = ({ weather, unit }: WeatherStatsProps) => {
     return 8;
   })();
 
+  const precipitationPct = (() => {
+    const w = weather.weather[0].main.toLowerCase();
+    const rainMm = weather.rain?.["1h"] ?? weather.rain?.["3h"] ?? 0;
+    const snowMm = weather.snow?.["1h"] ?? weather.snow?.["3h"] ?? 0;
+    if (rainMm > 5 || snowMm > 3) return 92;
+    if (rainMm > 0 || snowMm > 0) return Math.round(Math.min(90, 40 + Math.max(rainMm, snowMm) * 12));
+    if (w.includes("thunder")) return 85;
+    if (w.includes("snow") || w.includes("blizzard")) return 78;
+    if (w.includes("rain") || w.includes("shower") || w.includes("drizzle")) return 68;
+    if (w.includes("mist") || w.includes("fog")) return 42;
+    if (w.includes("cloud") || w.includes("overcast") || w.includes("broken")) return 24;
+    if (w.includes("scatter") || w.includes("few")) return 12;
+    if (w.includes("clear") || w.includes("sun")) return 2;
+    return 18;
+  })();
+
   return (
     <section className="weatherStats" aria-label="Weather conditions">
       <div className="statCard">
@@ -64,13 +80,14 @@ const WeatherStats = ({ weather, unit }: WeatherStatsProps) => {
       <div className="statCard hideSm">
         <div className="statIconWrap">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="statSvg">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25" />
+            <line x1="8" y1="19" x2="8" y2="22" />
+            <line x1="12" y1="19" x2="12" y2="22" />
+            <line x1="16" y1="19" x2="16" y2="22" />
           </svg>
         </div>
-        <p className="statLabel">Pressure</p>
-        <h3 className="statValue">{weather.main.pressure} hPa</h3>
+        <p className="statLabel">Precipitation</p>
+        <h3 className="statValue">{precipitationPct}%</h3>
       </div>
     </section>
   );
