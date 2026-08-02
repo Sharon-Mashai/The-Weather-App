@@ -1,6 +1,7 @@
 
 
 import './App.css'
+import { AirConditions } from './components/AirConditions'
 import { CurrentWeather } from './components/CurrentWeather'
 import { Header } from './components/Header'
 import { HourlyForecast } from './components/HourlyForecast'
@@ -17,6 +18,7 @@ function App() {
     <WeatherStats/>
     <HourlyForecast/>
     <WeeklyForecast/>
+    <AirConditions/>
     </>
   )
 }
