@@ -1,3 +1,10 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Location01Icon,
+  Search01Icon,
+  Delete02Icon,
+} from "@hugeicons/core-free-icons";
+
 import type { TemperatureUnit } from "../utils/weather";
 import { formatTempShort } from "../utils/weather";
 
@@ -7,10 +14,10 @@ export interface SavedLocation {
   country?: string;
   lat: number;
   lon: number;
-  isCurrent?: boolean;
-  lastTempC?: number;
   icon?: string;
+  lastTempC?: number;
   updatedAt?: number;
+  isCurrent?: boolean;
 }
 
 interface LocationsDrawerProps {
@@ -19,12 +26,12 @@ interface LocationsDrawerProps {
   locations: SavedLocation[];
   activeId: string | null;
   unit: TemperatureUnit;
-  onSelect: (loc: SavedLocation) => void;
+  onSelect: (location: SavedLocation) => void;
   onRemove: (id: string) => void;
   onSearchOpen: () => void;
 }
 
-export const LocationsDrawer = ({
+export default function LocationsDrawer({
   open,
   onClose,
   locations,
@@ -33,96 +40,132 @@ export const LocationsDrawer = ({
   onSelect,
   onRemove,
   onSearchOpen,
-}: LocationsDrawerProps) => {
+}: LocationsDrawerProps) {
   return (
     <>
       <div
         className={`drawerBackdrop ${open ? "show" : ""}`}
         onClick={onClose}
-        aria-hidden={!open}
       />
-      <aside className={`locationsDrawer ${open ? "open" : ""}`} aria-label="Saved locations">
+
+      <aside className={`locationsDrawer ${open ? "open" : ""}`}>
+
         <div className="drawerHeader">
-          <h3>My Locations</h3>
+
+          <h3>Saved Locations</h3>
+
           <button
             className="iconBtn"
             onClick={onClose}
-            aria-label="Close locations"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            ✕
           </button>
+
         </div>
 
-        <button className="searchRowBtn" onClick={onSearchOpen}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-          <span>Search for a city…</span>
+        <button
+          className="searchRowBtn"
+          onClick={onSearchOpen}
+        >
+          <HugeiconsIcon
+            icon={Search01Icon}
+            size={18}
+          />
+
+          Search city
+
         </button>
 
         {locations.length === 0 && (
-          <p className="emptyHint">No saved locations yet.</p>
+
+          <p className="emptyHint">
+            Search for a city to save it here.
+          </p>
+
         )}
 
         <ul className="locationsList">
-          {locations.map((loc) => {
-            const active = activeId === loc.id;
-            return (
-              <li key={loc.id} className={`locItem ${active ? "active" : ""}`}>
-                <button className="locItemBtn" onClick={() => onSelect(loc)}>
-                  <div className="locInfo">
-                    <div className="locNameRow">
-                      <span className="locName">
-                        {loc.isCurrent && "📍 "}
-                        {loc.name}
-                      </span>
-                      {loc.isCurrent && (
-                        <span className="locBadge">Current</span>
+
+          {locations.map((location) => (
+
+            <li
+              key={location.id}
+              className={`locItem ${
+                activeId === location.id ? "active" : ""
+              }`}
+            >
+
+              <button
+                className="locItemBtn"
+                onClick={() => onSelect(location)}
+              >
+
+                <div>
+
+                  <div className="locNameRow">
+
+                    <HugeiconsIcon
+                      icon={Location01Icon}
+                      size={16}
+                    />
+
+                    <span className="locName">
+                      {location.name}
+                    </span>
+
+                  </div>
+
+                  <div className="locCountry">
+                    {location.country}
+                  </div>
+
+                </div>
+
+                <div className="locTemp">
+
+                  {location.icon && (
+
+                    <img
+                      src={`https://openweathermap.org/img/wn/${location.icon}.png`}
+                      alt=""
+                    />
+
+                  )}
+
+                  {location.lastTempC !== undefined && (
+
+                    <span className="locTempVal">
+
+                      {formatTempShort(
+                        location.lastTempC,
+                        unit
                       )}
-                    </div>
-                    {loc.country && <small className="locCountry">{loc.country}</small>}
-                  </div>
 
-                  <div className="locTemp">
-                    {loc.lastTempC !== undefined && (
-                      <span className="locTempVal">
-                        {formatTempShort(loc.lastTempC, unit)}
-                      </span>
-                    )}
-                    {loc.icon && (
-                      <img
-                        width="36"
-                        height="36"
-                        src={`https://openweathermap.org/img/wn/${loc.icon}@2x.png`}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                </button>
+                    </span>
 
-                {!loc.isCurrent && (
-                  <button
-                    className="locRemove"
-                    onClick={() => onRemove(loc.id)}
-                    aria-label={`Remove ${loc.name}`}
-                    title="Remove location"
-                  >
-                    ×
-                  </button>
-                )}
-              </li>
-            );
-          })}
+                  )}
+
+                </div>
+
+              </button>
+
+              <button
+                className="locRemove"
+                onClick={() => onRemove(location.id)}
+              >
+                <HugeiconsIcon
+                  icon={Delete02Icon}
+                  size={18}
+                />
+              </button>
+
+            </li>
+
+          ))}
+
         </ul>
 
-        <div className="drawerFooter">
-          <small>Locations are stored locally on your device.</small>
-        </div>
       </aside>
     </>
   );
-};
+}

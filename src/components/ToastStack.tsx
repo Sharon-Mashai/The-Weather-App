@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export type ToastKind = "success" | "error" | "info" | "warning";
+export type ToastKind = "success" | "error" | "warning" | "info";
 
 export interface ToastItem {
   id: number;
@@ -8,58 +8,63 @@ export interface ToastItem {
   kind: ToastKind;
 }
 
-interface ToastProps {
+interface ToastStackProps {
   toasts: ToastItem[];
   onDismiss: (id: number) => void;
 }
 
-const kindStyles: Record<ToastKind, { bg: string; border: string; icon: string }> = {
-  success: { bg: "rgba(34, 197, 94, 0.18)", border: "1px solid rgba(34, 197, 94, 0.35)", icon: "✓" },
-  error: { bg: "rgba(239, 68, 68, 0.18)", border: "1px solid rgba(239, 68, 68, 0.35)", icon: "!" },
-  info: { bg: "rgba(59, 130, 246, 0.18)", border: "1px solid rgba(59, 130, 246, 0.35)", icon: "ℹ" },
-  warning: { bg: "rgba(245, 158, 11, 0.18)", border: "1px solid rgba(245, 158, 11, 0.35)", icon: "⚠" },
-};
+export function ToastStack({
+  toasts,
+  onDismiss,
+}: ToastStackProps) {
+  useEffect(() => {
+    const timers = toasts.map((toast) =>
+      window.setTimeout(() => {
+        onDismiss(toast.id);
+      }, 4000)
+    );
 
-export const ToastStack = ({ toasts, onDismiss }: ToastProps) => {
+    return () => {
+      timers.forEach(clearTimeout);
+    };
+  }, [toasts, onDismiss]);
+
+  const getIcon = (kind: ToastKind) => {
+    switch (kind) {
+      case "success":
+        return "✓";
+      case "error":
+        return "✕";
+      case "warning":
+        return "⚠";
+      default:
+        return "ℹ";
+    }
+  };
+
   return (
     <div className="toastStack">
-      {toasts.map((t) => (
-        <ToastCard key={t.id} toast={t} onDismiss={onDismiss} />
+      {toasts.map((toast) => (
+        <div
+          key={toast.id}
+          className={`toastCard toast-${toast.kind}`}
+        >
+          <div className="toastIcon">
+            {getIcon(toast.kind)}
+          </div>
+
+          <div className="toastMsg">
+            {toast.message}
+          </div>
+
+          <button
+            className="toastClose"
+            onClick={() => onDismiss(toast.id)}
+          >
+            ×
+          </button>
+        </div>
       ))}
     </div>
   );
-};
-
-interface ToastCardProps {
-  toast: ToastItem;
-  onDismiss: (id: number) => void;
 }
-
-const ToastCard = ({ toast, onDismiss }: ToastCardProps) => {
-  const style = kindStyles[toast.kind];
-
-  useEffect(() => {
-    const timer = setTimeout(() => onDismiss(toast.id), 3800);
-    return () => clearTimeout(timer);
-  }, [toast.id, onDismiss]);
-
-  return (
-    <div
-      className="toastCard"
-      style={{ background: style.bg, border: style.border }}
-      role="status"
-    >
-      <span className="toastIcon" aria-hidden>
-        {style.icon}
-      </span>
-      <span className="toastMsg">{toast.message}</span>
-      <button
-        className="toastClose"
-        onClick={() => onDismiss(toast.id)}
-        aria-label="Dismiss notification"
-      >
-        ×
-      </button>
-    </div>
-  );
-};

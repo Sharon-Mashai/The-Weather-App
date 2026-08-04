@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
-  const [storedValue, setStoredValue] = useState<T>(() => {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const [value, setValue] = useState<T>(() => {
     try {
-      const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : initialValue;
+      const storedValue = localStorage.getItem(key);
+
+      if (storedValue !== null) {
+        return JSON.parse(storedValue);
+      }
+
+      return initialValue;
     } catch {
       return initialValue;
     }
@@ -12,28 +20,11 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(key, JSON.stringify(storedValue));
+      localStorage.setItem(key, JSON.stringify(value));
     } catch {
-      // silent fail if localStorage is unavailable (private mode etc.)
+      console.error("Unable to save data to localStorage.");
     }
-  }, [key, storedValue]);
+  }, [key, value]);
 
-  return [storedValue, setStoredValue] as const;
-}
-
-export function getFromStorage<T>(key: string, fallback: T): T {
-  try {
-    const item = window.localStorage.getItem(key);
-    return item ? (JSON.parse(item) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-export function setToStorage<T>(key: string, value: T): void {
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // ignore
-  }
+  return [value, setValue];
 }

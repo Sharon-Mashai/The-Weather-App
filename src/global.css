@@ -1,82 +1,160 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-/* ---------- THEME VARIABLES ---------- */
+/* ---------- [1] PAGE FOUNDATION ---------- */
 :root,
 :root[data-theme="dark"] {
-  --bg-app: #1a1a2e;
-  --phone-gradient-1: #1a2238;
-  --phone-gradient-2: #0f1424;
-  --phone-gradient-3: #0b0f1e;
-  --phone-glow: rgba(255, 170, 60, 0.28);
-  --phone-border: rgba(255, 255, 255, 0.05);
-  --text-primary: #ffffff;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-  --text-extra-muted: #6b7280;
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-strong: rgba(255, 255, 255, 0.08);
-  --surface-hover: rgba(255, 255, 255, 0.12);
-  --surface-active: rgba(255, 255, 255, 0.16);
-  --now-card-1: rgba(135, 206, 250, 0.22);
-  --now-card-2: rgba(255, 255, 255, 0.07);
-  --now-card-border: rgba(255, 255, 255, 0.12);
-  --divider: rgba(255, 255, 255, 0.08);
-  --accent-primary: #3b82f6;
-  --accent-secondary: #60a5fa;
-  --accent-soft: rgba(59, 130, 246, 0.18);
-  --success: rgba(34, 197, 94, 0.18);
-  --error: rgba(239, 68, 68, 0.18);
-  --warning: rgba(245, 158, 11, 0.18);
-  --shadow-phone: 0 30px 80px rgba(0, 0, 0, 0.5);
-  --shadow-modal: 0 25px 70px rgba(0, 0, 0, 0.5);
-  --modal-bg-1: #1e2740;
-  --modal-bg-2: #141a2c;
-  --overlay: rgba(0, 0, 0, 0.65);
-  --search-input-bg: rgba(255, 255, 255, 0.06);
-  --btn-deny-bg: rgba(255, 255, 255, 0.08);
-  --btn-deny-text: #d1d5db;
-  --loc-active-bg: rgba(59, 130, 246, 0.12);
-  --stroke-svg: white;
-  --fill-svg: none;
+  --page-background: #1a1a2e;
+  --page-background-grad: linear-gradient(180deg, #1a1a2e 0%, #0f1424 100%);
+
+  /* ---------- [2] CARD SURFACE ---------- */
+  --card-gradient-top: #1a2238;
+  --card-gradient-mid: #0f1424;
+  --card-gradient-bottom: #0b0f1e;
+  --card-edge-stroke: rgba(255, 255, 255, 0.05);
+
+  /* ---------- [3] ATMOSPHERIC GLOW ---------- */
+  --sunset-radial-glow: rgba(255, 170, 60, 0.28);
+  --hero-radial-blue: rgba(135, 206, 250, 0.22);
+
+  /* ---------- [4] TEXT RAMP ---------- */
+  --text-body: #ffffff;
+  --text-subtle: #d1d5db;
+  --text-dim: #9ca3af;
+  --text-faint: #6b7280;
+
+  /* ---------- [5] GLASS PANELS ---------- */
+  --glass-panel: rgba(255, 255, 255, 0.05);
+  --glass-panel-strong: rgba(255, 255, 255, 0.08);
+  --glass-panel-hover: rgba(255, 255, 255, 0.12);
+  --glass-panel-active: rgba(255, 255, 255, 0.16);
+  --hairline-rule: rgba(255, 255, 255, 0.08);
+
+  /* ---------- [6] ACCENT CARD ---------- */
+  --accent-gradient-card-1: rgba(135, 206, 250, 0.22);
+  --accent-gradient-card-2: rgba(255, 255, 255, 0.07);
+  --accent-card-edge: rgba(255, 255, 255, 0.12);
+
+  /* ---------- [7] ACCENT CORE ---------- */
+  --accent-core: #3b82f6;
+  --accent-soft: #60a5fa;
+  --accent-pill: rgba(59, 130, 246, 0.18);
+  --accent-temp-gradient: linear-gradient(90deg, #60a5fa 0%, #ffa63d 100%);
+
+  /* ---------- [8] STATUS INDICATORS ---------- */
+  --status-success-bg: rgba(34, 197, 94, 0.18);
+  --status-success-fg: #22c55e;
+  --status-error-bg: rgba(239, 68, 68, 0.18);
+  --status-error-fg: #ef4444;
+  --status-warning-bg: rgba(245, 158, 11, 0.18);
+  --status-warning-fg: #f59e0b;
+  --status-info-bg: rgba(59, 130, 246, 0.18);
+  --status-info-fg: #3b82f6;
+
+  /* ---------- [9] SHADOW LAYER ---------- */
+  --shadow-card-stack: 0 30px 80px rgba(0, 0, 0, 0.5);
+  --shadow-modal-float: 0 25px 70px rgba(0, 0, 0, 0.5);
+  --shadow-glow-soft: 0 30px 60px -40px rgba(0, 0, 0, 0.55);
+
+  /* ---------- [10] MODAL SHEET ---------- */
+  --modal-surface-top: #1e2740;
+  --modal-surface-bottom: #141a2c;
+  --backdrop-dim: rgba(0, 0, 0, 0.65);
+
+  /* ---------- [11] SEARCH FIELD ---------- */
+  --search-field-bg: rgba(255, 255, 255, 0.06);
+
+  /* ---------- [12] DIALOG ACTIONS ---------- */
+  --deny-button-bg: rgba(255, 255, 255, 0.08);
+  --deny-button-text: #d1d5db;
+
+  /* ---------- [13] LOCATION NAV ---------- */
+  --active-location-bg: rgba(59, 130, 246, 0.12);
+
+  /* ---------- [14] ICON STROKE ---------- */
+  --icon-stroke-color: white;
+  --icon-fill-color: none;
 }
 
+/* ================================================================== */
+/* ---------------------------- LIGHT THEME ------------------------- */
+/* ================================================================== */
+
 :root[data-theme="light"] {
-  --bg-app: linear-gradient(180deg, #e0ecff 0%, #f5f7fc 100%);
-  --phone-gradient-1: #f8fbff;
-  --phone-gradient-2: #e9f0fb;
-  --phone-gradient-3: #dde7f5;
-  --phone-glow: rgba(255, 170, 60, 0.2);
-  --phone-border: rgba(30, 64, 175, 0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-extra-muted: #94a3b8;
-  --surface: rgba(15, 23, 42, 0.05);
-  --surface-strong: rgba(15, 23, 42, 0.08);
-  --surface-hover: rgba(15, 23, 42, 0.12);
-  --surface-active: rgba(15, 23, 42, 0.16);
-  --now-card-1: rgba(59, 130, 246, 0.25);
-  --now-card-2: rgba(255, 255, 255, 0.6);
-  --now-card-border: rgba(59, 130, 246, 0.25);
-  --divider: rgba(15, 23, 42, 0.08);
-  --accent-primary: #2563eb;
-  --accent-secondary: #3b82f6;
-  --accent-soft: rgba(37, 99, 235, 0.14);
-  --success: rgba(22, 163, 74, 0.14);
-  --error: rgba(220, 38, 38, 0.14);
-  --warning: rgba(217, 119, 6, 0.14);
-  --shadow-phone: 0 25px 70px rgba(15, 23, 42, 0.18);
-  --shadow-modal: 0 20px 60px rgba(15, 23, 42, 0.22);
-  --modal-bg-1: #ffffff;
-  --modal-bg-2: #f5f7fc;
-  --overlay: rgba(15, 23, 42, 0.5);
-  --search-input-bg: rgba(15, 23, 42, 0.06);
-  --btn-deny-bg: rgba(15, 23, 42, 0.08);
-  --btn-deny-text: #334155;
-  --loc-active-bg: rgba(37, 99, 235, 0.12);
-  --stroke-svg: #0f172a;
-  --fill-svg: none;
+  /* ---------- [1] PAGE FOUNDATION ---------- */
+  --page-background: linear-gradient(180deg, #e0ecff 0%, #f5f7fc 100%);
+  --page-background-grad: linear-gradient(180deg, #e0ecff 0%, #f5f7fc 100%);
+
+  /* ---------- [2] CARD SURFACE ---------- */
+  --card-gradient-top: #f8fbff;
+  --card-gradient-mid: #e9f0fb;
+  --card-gradient-bottom: #dde7f5;
+  --card-edge-stroke: rgba(30, 64, 175, 0.08);
+
+  /* ---------- [3] ATMOSPHERIC GLOW ---------- */
+  --sunset-radial-glow: rgba(255, 170, 60, 0.2);
+  --hero-radial-blue: rgba(59, 130, 246, 0.25);
+
+  /* ---------- [4] TEXT RAMP ---------- */
+  --text-body: #0f172a;
+  --text-subtle: #334155;
+  --text-dim: #64748b;
+  --text-faint: #94a3b8;
+
+  /* ---------- [5] GLASS PANELS ---------- */
+  --glass-panel: rgba(15, 23, 42, 0.05);
+  --glass-panel-strong: rgba(15, 23, 42, 0.08);
+  --glass-panel-hover: rgba(15, 23, 42, 0.12);
+  --glass-panel-active: rgba(15, 23, 42, 0.16);
+  --hairline-rule: rgba(15, 23, 42, 0.08);
+
+  /* ---------- [6] ACCENT CARD ---------- */
+  --accent-gradient-card-1: rgba(59, 130, 246, 0.25);
+  --accent-gradient-card-2: rgba(255, 255, 255, 0.6);
+  --accent-card-edge: rgba(59, 130, 246, 0.25);
+
+  /* ---------- [7] ACCENT CORE ---------- */
+  --accent-core: #2563eb;
+  --accent-soft: #3b82f6;
+  --accent-pill: rgba(37, 99, 235, 0.14);
+
+  /* ---------- [8] STATUS INDICATORS ---------- */
+  --status-success-bg: rgba(22, 163, 74, 0.14);
+  --status-success-fg: #16a34a;
+  --status-error-bg: rgba(220, 38, 38, 0.14);
+  --status-error-fg: #dc2626;
+  --status-warning-bg: rgba(217, 119, 6, 0.14);
+  --status-warning-fg: #d97706;
+  --status-info-bg: rgba(37, 99, 235, 0.14);
+  --status-info-fg: #2563eb;
+
+  /* ---------- [9] SHADOW LAYER ---------- */
+  --shadow-card-stack: 0 25px 70px rgba(15, 23, 42, 0.18);
+  --shadow-modal-float: 0 20px 60px rgba(15, 23, 42, 0.22);
+  --shadow-glow-soft: 0 20px 50px -30px rgba(15, 23, 42, 0.35);
+
+  /* ---------- [10] MODAL SHEET ---------- */
+  --modal-surface-top: #ffffff;
+  --modal-surface-bottom: #f5f7fc;
+  --backdrop-dim: rgba(15, 23, 42, 0.5);
+
+  /* ---------- [11] SEARCH FIELD ---------- */
+  --search-field-bg: rgba(15, 23, 42, 0.06);
+
+  /* ---------- [12] DIALOG ACTIONS ---------- */
+  --deny-button-bg: rgba(15, 23, 42, 0.08);
+  --deny-button-text: #334155;
+
+  /* ---------- [13] LOCATION NAV ---------- */
+  --active-location-bg: rgba(37, 99, 235, 0.12);
+
+  /* ---------- [14] ICON STROKE ---------- */
+  --icon-stroke-color: #0f172a;
+  --icon-fill-color: none;
 }
+
+/* ================================================================== */
+/* ---------------------------- GLOBAL RESET ------------------------ */
+/* ================================================================== */
 
 * {
   margin: 0;
@@ -92,13 +170,15 @@ body,
 
 body {
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: var(--bg-app);
-  color: var(--text-primary);
+  background: var(--page-background);
+  color: var(--text-body);
   overflow-x: hidden;
   min-height: 100vh;
   display: block;
   padding: 0;
   transition: background-color 0.3s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -108,19 +188,29 @@ body {
 }
 
 svg {
-  fill: var(--fill-svg);
-  stroke: var(--stroke-svg);
+  fill: var(--icon-fill-color);
+  stroke: var(--icon-stroke-color);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-/* ---------- LAYOUT (WEBSITE-FIRST, DESKTOP) ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* APP LAYOUT*/
+
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1380px;
+  max-width: 100%;
   margin: 0 auto;
   gap: 0;
+  background: var(--page-background-grad);
 }
 
 .websiteShell {
@@ -133,58 +223,61 @@ svg {
 .websiteMain {
   flex: 1 1 auto;
   width: 100%;
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 32px 40px 80px;
+  padding: 28px 32px 72px;
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
   align-items: start;
 }
 
 .websiteContent {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   min-width: 0;
 }
 
 .websiteSidebar {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
   position: sticky;
-  top: 104px;
+  top: 96px;
 }
 
 .websiteFooter {
-  border-top: 1px solid var(--divider);
-  padding: 22px 40px 28px;
+  border-top: 1px solid var(--hairline-rule);
+  padding: 20px 32px 26px;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.2px;
 }
 
-/* ---------- TOP NAV ---------- */
+/* ================================================================== */
+/* ---------------------------- TOP NAVIGATION ---------------------- */
+/* ================================================================== */
+
 .topNav {
   position: sticky;
   top: 0;
   z-index: 40;
   background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0));
-  backdrop-filter: saturate(160%) blur(18px);
-  -webkit-backdrop-filter: saturate(160%) blur(18px);
-  border-bottom: 1px solid var(--divider);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--hairline-rule);
 }
 
 .topNavInner {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 14px 40px;
+  padding: 12px 32px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .navBrand {
@@ -199,11 +292,12 @@ svg {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-primary), #ffa63d);
+  background: linear-gradient(135deg, var(--accent-core), #ffa63d);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: 20px;
   box-shadow: 0 10px 24px -8px rgba(59, 130, 246, 0.45);
 }
 
@@ -219,17 +313,18 @@ svg {
 }
 
 .brandName {
-  font-size: 18px;
+  font-size: 17.5px;
   font-weight: 700;
   letter-spacing: -0.2px;
-  color: var(--text-primary);
+  color: var(--text-body);
 }
 
 .brandTag {
-  font-size: 11.5px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-dim);
   font-weight: 500;
   letter-spacing: 0.2px;
+  margin-top: 2px;
 }
 
 .navSpacer {
@@ -237,30 +332,82 @@ svg {
 }
 
 .navLocation {
-  display: none;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
   border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid var(--divider);
+  background: var(--glass-panel);
+  border: 1px solid var(--hairline-rule);
   max-width: 420px;
   min-width: 0;
 }
 
-.navActions {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.navLocation svg {
+  color: var(--accent-core);
+  stroke: var(--accent-core);
+  flex-shrink: 0;
 }
 
-/* ---------- SECTION WRAPPER ---------- */
-.sectionCard {
-  background: var(--surface);
-  border: 1px solid var(--divider);
-  border-radius: 20px;
-  padding: 22px 24px;
+.navLocation strong {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-body);
+}
+
+.navLocation .locationCountry {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ================================================================== */
+/* ---------------------------- ICON BUTTONS ------------------------ */
+/* ================================================================== */
+
+.iconBtn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 13px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-body);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   transition: background 0.2s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.iconBtn:hover {
+  background: var(--glass-panel-strong);
+  transform: translateY(-1px);
+}
+
+.iconBtn:active {
+  transform: translateY(0);
+  background: var(--glass-panel-active);
+}
+
+.iconBtn.small {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+/* ================================================================== */
+/* ---------------------------- SECTION CARD ------------------------ */
+/* ================================================================== */
+
+.sectionCard {
+  background: var(--glass-panel);
+  border: 1px solid var(--hairline-rule);
+  border-radius: 22px;
+  padding: 22px 24px;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .sectionCard + .sectionCard {
@@ -271,7 +418,7 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   gap: 12px;
 }
 
@@ -285,8 +432,8 @@ svg {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: var(--accent-soft);
-  color: var(--accent-primary);
+  background: var(--accent-pill);
+  color: var(--accent-core);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -301,126 +448,38 @@ svg {
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.15px;
-  color: var(--text-primary);
+  color: var(--text-body);
 }
 
-/* ---------- HERO (CURRENT WEATHER) ---------- */
+/* ================================================================== */
+/* ---------------------------- HERO SECTION ------------------------ */
+/* ================================================================== */
+
 .currentHero {
-  border-radius: 28px;
-  padding: 34px 36px;
   background:
-    radial-gradient(circle at 88% 0%, var(--phone-glow), transparent 42%),
-    linear-gradient(135deg, var(--phone-gradient-1), var(--phone-gradient-2));
-  border: 1px solid var(--divider);
-  box-shadow: 0 30px 60px -40px rgba(0, 0, 0, 0.55);
+    radial-gradient(circle at 88% 0%, var(--sunset-radial-glow), transparent 42%),
+    radial-gradient(circle at 0% 100%, var(--hero-radial-blue), transparent 50%),
+    linear-gradient(135deg, var(--card-gradient-top), var(--card-gradient-mid));
+  border: 1px solid var(--hairline-rule);
+  box-shadow: var(--shadow-glow-soft);
   position: relative;
   overflow: hidden;
+  padding: 30px 32px;
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 28px;
   align-items: center;
 }
 
 .heroPrimary {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   position: relative;
   z-index: 1;
-}
-
-.heroEyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  letter-spacing: 0.25px;
-}
-
-.heroLocationRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.heroLocationRow .locationBlock {
-  text-align: left;
-  margin: 0;
-}
-
-.heroLocationRow .locationLabel {
-  font-size: 24px;
-}
-
-.heroLocationRow .locationLabelRow {
-  justify-content: flex-start;
-}
-
-.heroTempRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.heroTemp {
-  font-size: clamp(64px, 9vw, 104px);
-  line-height: 0.9;
-  font-weight: 700;
-  letter-spacing: -3px;
-  color: var(--text-primary);
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.heroTemp span {
-  font-size: 40px;
-  font-weight: 500;
-  margin-top: 10px;
-  color: var(--text-secondary);
-  letter-spacing: -1px;
-}
-
-.heroDescription {
-  font-size: 17px;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  max-width: 520px;
-  font-weight: 400;
-}
-
-.heroMetaRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.heroMetaPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--divider);
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  font-weight: 500;
-}
-
-.heroMetaPill svg {
-  fill: none;
-  stroke: currentColor;
-  color: var(--accent-primary);
 }
 
 .heroRight {
@@ -433,19 +492,6 @@ svg {
   justify-content: center;
 }
 
-.heroIconWrap {
-  position: relative;
-  width: 240px;
-  max-width: 100%;
-  filter: drop-shadow(0 30px 40px rgba(255, 170, 60, 0.18));
-}
-
-.heroIconWrap img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
 .heroSideCards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -454,108 +500,63 @@ svg {
 }
 
 .heroSideCard {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--divider);
+  background: var(--glass-panel);
+  border: 1px solid var(--hairline-rule);
   border-radius: 16px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.heroSideCard:hover {
+  background: var(--glass-panel-strong);
+  transform: translateY(-2px);
 }
 
 .heroSideCardLabel {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.25px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  text-transform: uppercase;
 }
 
 .heroSideCardValue {
-  color: var(--text-primary);
+  color: var(--text-body);
   font-size: 20px;
   font-weight: 600;
   margin-top: 2px;
+  line-height: 1.1;
 }
 
-/* ---------- OLD PHONE CHROME — now disabled to look like a website ---------- */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 4px 10px;
-  margin-bottom: 2px;
-}
+/* ================================================================== */
+/* ---------------------------- CURRENT WEATHER --------------------- */
+/* ================================================================== */
 
-.phoneContainer {
-  all: unset;
-  display: block;
+.currentWeather {
   width: 100%;
-  min-height: auto;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   padding: 0;
-  position: static;
-  overflow: visible;
+  gap: 6px;
 }
 
-.phoneContainer::before {
-  display: none;
-}
-
-.phoneWrap {
-  width: 100%;
-}
-
-.desktopHero {
-  display: none;
-}
-
-.iconBtn {
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 14px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--text-primary);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 0.2s ease, transform 0.15s ease;
-  user-select: none;
-}
-
-.iconBtn:hover {
-  background: var(--surface-strong);
-  transform: translateY(-1px);
-}
-
-.iconBtn:active {
-  transform: translateY(0);
-  background: var(--surface-active);
-}
-
-.iconBtn.small {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  font-size: 18px;
-}
-
-.headerActionsCompact {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.currentWeather .locationBlock {
+  text-align: left;
+  margin: 0;
 }
 
 .locationBlock {
   text-align: center;
-  margin: 4px 0 18px;
+  margin: 4px 0 14px;
 }
 
 .locationLabelRow {
@@ -564,138 +565,92 @@ svg {
   gap: 6px;
 }
 
-.locPinIcon {
-  opacity: 0.8;
-}
-
-.locationLabel {
-  font-size: 20px;
+.locationName {
+  font-size: 24px;
   font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: 0.2px;
+  color: var(--text-body);
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
 }
 
-.locationCountry {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-.locationMeta {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-}
-
-.offlineBadge {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+.currentWeather .locationCountry {
+  color: var(--text-dim);
   font-weight: 500;
-}
-
-.updatedText {
-  color: var(--text-muted);
-  font-size: 12.5px;
-}
-.updatedText.muted {
-  color: var(--text-extra-muted);
-}
-
-/* ---------- CURRENT WEATHER HERO ---------- */
-.currentWeather {
-  width: 100%;
-  margin-top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 4px 0 10px;
-}
-
-.currentWeatherInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: transparent;
-  border-radius: 0;
-  padding: 0;
-  backdrop-filter: none;
-  gap: 6px;
-  width: 100%;
+  font-size: 14px;
 }
 
 .weatherIcon {
-  order: 1;
-  margin-bottom: 2px;
+  margin: 0;
 }
 
 .weatherIcon img {
-  width: 240px;
-  max-width: 80vw;
-  filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.22));
+  width: 180px;
+  max-width: 60vw;
+  filter: drop-shadow(0 20px 40px rgba(255, 170, 60, 0.2));
 }
 
-.weatherText {
-  order: 2;
+.weatherInfo {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
+  gap: 4px;
 }
 
-.weatherText h1 {
-  font-size: clamp(80px, 14vw, 110px);
-  color: var(--text-primary);
+.weatherInfo h1 {
+  font-size: clamp(72px, 10vw, 112px);
+  color: var(--text-body);
   font-weight: 600;
-  line-height: 0.95;
-  letter-spacing: -2px;
-  margin: 2px 0 0;
+  line-height: 0.9;
+  letter-spacing: -3px;
+  margin: 0;
   display: inline-flex;
   align-items: flex-start;
   gap: 4px;
 }
 
-.weatherText h1 span {
-  font-size: 0.45em;
+.weatherInfo h1 span {
+  font-size: 0.4em;
   font-weight: 400;
   opacity: 0.85;
-  padding-top: 0.15em;
+  padding-top: 0.2em;
+  letter-spacing: -0.5px;
 }
 
-.description {
-  color: var(--text-secondary);
+.weatherDescription {
+  color: var(--text-subtle);
   font-size: 17px;
-  font-weight: 400;
-  margin-top: 6px;
-  max-width: 320px;
-  line-height: 1.4;
+  font-weight: 500;
+  margin-top: 4px;
+  text-transform: capitalize;
 }
 
-/* ---------- STATS ---------- */
+/* ================================================================== */
+/* ---------------------------- WEATHER STATS ----------------------- */
+/* ================================================================== */
+
 .weatherStats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  margin: 22px 0 4px;
-  padding: 0 4px;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
 }
 
 .statCard {
-  background: transparent;
+  background: var(--glass-panel);
+  border: 1px solid var(--hairline-rule);
   border-radius: 16px;
-  padding: 12px 6px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
   cursor: default;
+}
+
+.statCard:hover {
+  background: var(--glass-panel-strong);
+  transform: translateY(-1px);
 }
 
 .statIconWrap {
@@ -709,8 +664,11 @@ svg {
 }
 
 .statLabel {
-  color: var(--text-muted);
-  font-size: 12.5px;
+  color: var(--text-dim);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
   margin: 0;
   display: flex;
   align-items: center;
@@ -718,60 +676,33 @@ svg {
 }
 
 .statValue {
-  color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 500;
+  color: var(--text-body);
+  font-size: 17px;
+  font-weight: 600;
   margin: 0;
   line-height: 1.1;
 }
 
-/* ---------- FORECAST ---------- */
-.forecastTabsWrap {
-  margin-top: 26px;
-}
-
-.sectionHeading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  padding: 0 6px;
-}
-
-.sectionHeading .titleWrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sectionHeading h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.headingIcon {
-  display: inline-flex;
-  opacity: 0.9;
-}
+/* ================================================================== */
+/* ---------------------------- FORECAST TABS ----------------------- */
+/* ================================================================== */
 
 .forecastTabs {
   display: inline-flex;
-  background: var(--surface);
+  background: var(--glass-panel);
   padding: 4px;
-  border-radius: 14px;
+  border-radius: 13px;
   gap: 4px;
 }
 
 .tabBtn {
   border: none;
   background: transparent;
-  color: var(--text-muted);
-  padding: 8px 14px;
-  border-radius: 11px;
+  color: var(--text-dim);
+  padding: 9px 16px;
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
@@ -780,24 +711,33 @@ svg {
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
+.tabBtn svg {
+  stroke: currentColor;
+}
+
 .tabBtn:hover {
-  color: var(--text-primary);
-  background: var(--surface-strong);
+  color: var(--text-body);
+  background: var(--glass-panel-strong);
 }
 
 .tabBtn.active {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  box-shadow: inset 0 0 0 1px var(--accent-primary);
+  background: var(--accent-pill);
+  color: var(--accent-core);
+  box-shadow: inset 0 0 0 1px var(--accent-pill);
   transform: translateY(0);
+  font-weight: 600;
 }
 
 .tabBtn.active:hover {
-  background: var(--accent-soft);
+  background: var(--accent-pill);
 }
 
+/* ================================================================== */
+/* ---------------------------- HOURLY FORECAST --------------------- */
+/* ================================================================== */
+
 .hourlyForecast {
-  margin-top: 14px;
+  margin-top: 4px;
   padding: 0;
 }
 
@@ -806,7 +746,7 @@ svg {
   gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 4px 4px 8px;
+  padding: 4px 2px 8px;
 }
 
 .hourlyCards::-webkit-scrollbar {
@@ -816,8 +756,8 @@ svg {
 .hourCard {
   min-width: 88px;
   padding: 16px 10px;
-  background: var(--surface);
-  border-radius: 20px;
+  background: var(--glass-panel);
+  border-radius: 18px;
   text-align: center;
   transition: 0.2s ease;
   flex-shrink: 0;
@@ -830,9 +770,9 @@ svg {
 }
 
 .hourCard:hover {
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
   transform: translateY(-2px);
-  border-color: var(--divider);
+  border-color: var(--hairline-rule);
 }
 
 .hourCard:active {
@@ -840,71 +780,84 @@ svg {
 }
 
 .hourLabel {
-  color: var(--text-secondary);
-  font-size: 14px;
+  color: var(--text-subtle);
+  font-size: 13.5px;
   font-weight: 500;
   margin: 0;
 }
 
 .hourPop {
-  color: var(--accent-primary);
+  color: var(--accent-core);
   font-size: 11px;
   font-weight: 600;
-  margin-top: 1px;
-  background: var(--accent-soft);
-  padding: 1px 7px;
+  margin-top: 2px;
+  background: var(--accent-pill);
+  padding: 2px 8px;
   border-radius: 999px;
 }
 
 .hourCard img {
-  width: 48px;
+  width: 46px;
   margin: 6px auto 2px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .hourTemp {
-  color: var(--text-primary);
-  font-size: 20px;
+  color: var(--text-body);
+  font-size: 19px;
   font-weight: 600;
   margin: 0;
 }
 
 .nowCard {
-  background: linear-gradient(180deg, var(--now-card-1), var(--now-card-2));
-  border: 1px solid var(--now-card-border);
+  background: linear-gradient(180deg, var(--accent-gradient-card-1), var(--accent-gradient-card-2));
+  border: 1px solid var(--accent-card-edge);
 }
 
 .nowCard .hourLabel {
-  color: var(--accent-primary);
+  color: var(--accent-core);
   font-weight: 600;
 }
 
+/* ================================================================== */
+/* ---------------------------- WEEKLY FORECAST --------------------- */
+/* ================================================================== */
+
 .weeklyForecast {
-  margin-top: 22px;
+  margin-top: 4px;
   padding: 0;
 }
 
 .forecastList {
   display: flex;
   flex-direction: column;
-  background: var(--surface);
-  border-radius: 24px;
-  padding: 4px 18px;
+  background: var(--glass-panel);
+  border-radius: 20px;
+  padding: 4px 16px;
+  border: 1px solid var(--hairline-rule);
+}
+
+.websiteSidebar .forecastList {
+  background: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 0;
 }
 
 .forecastItem {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 16px;
-  padding: 13px 0;
-  border-bottom: 1px solid var(--divider);
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline-rule);
   cursor: pointer;
   transition: background 0.15s ease;
   border-radius: 8px;
 }
 
 .forecastItem:hover {
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
   padding-left: 8px;
   padding-right: 8px;
   margin-left: -8px;
@@ -922,34 +875,38 @@ svg {
 }
 
 .forecastDay {
-  color: var(--text-primary);
+  color: var(--text-body);
   font-size: 15px;
   font-weight: 500;
   margin: 0;
 }
 
 .forecastDate {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 11.5px;
 }
 
 .forecastItem img {
   width: 38px;
   justify-self: center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
 }
 
 .forecastTemp {
-  color: var(--text-primary);
+  color: var(--text-body);
   font-size: 16px;
   font-weight: 500;
   margin: 0;
   justify-self: end;
 }
 
-/* ---------- EXTENDED WEEKLY FORECAST (MIN / MAX) ---------- */
+/* ================================================================== */
+/* ---------------------------- EXTENDED WEEKLY --------------------- */
+/* ================================================================== */
+
 .forecastItemExtended {
   grid-template-columns: 88px 64px 1fr;
-  gap: 14px;
+  gap: 12px;
   padding: 12px 0;
 }
 
@@ -967,38 +924,38 @@ svg {
 }
 
 .dayIconWrap img {
-  width: 40px;
+  width: 42px;
   display: block;
 }
 
 .popChip {
-  margin-top: 2px;
-  color: var(--accent-primary);
-  background: var(--accent-soft);
+  margin-top: 3px;
+  color: var(--accent-core);
+  background: var(--accent-pill);
   border-radius: 999px;
   font-size: 10.5px;
   font-weight: 600;
-  padding: 1px 7px;
+  padding: 2px 8px;
   line-height: 1.4;
   letter-spacing: 0.2px;
 }
 
 .tempRangeWrap {
   display: grid;
-  grid-template-columns: 42px 1fr 42px;
+  grid-template-columns: 44px 1fr 44px;
   align-items: center;
   gap: 10px;
 }
 
 .tempRangeLow {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 14px;
   font-weight: 500;
   text-align: right;
 }
 
 .tempRangeHigh {
-  color: var(--text-primary);
+  color: var(--text-body);
   font-size: 14.5px;
   font-weight: 600;
   text-align: left;
@@ -1009,7 +966,7 @@ svg {
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
   overflow: hidden;
 }
 
@@ -1018,11 +975,14 @@ svg {
   top: 0;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #60a5fa 0%, #ffa63d 100%);
+  background: var(--accent-temp-gradient);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
 }
 
-/* ---------- LOADING / ERROR ---------- */
+/* ================================================================== */
+/* ---------------------------- LOADING / ERROR --------------------- */
+/* ================================================================== */
+
 .loadingState {
   display: flex;
   flex-direction: column;
@@ -1030,18 +990,20 @@ svg {
   align-items: center;
   padding: 80px 20px;
   gap: 16px;
+  min-height: 60vh;
 }
 
 .loadingState p {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 15px;
+  font-weight: 500;
 }
 
 .spinner {
   width: 44px;
   height: 44px;
-  border: 3.5px solid var(--surface-strong);
-  border-top-color: var(--accent-primary);
+  border: 3.5px solid var(--glass-panel-strong);
+  border-top-color: var(--accent-core);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
@@ -1055,16 +1017,22 @@ svg {
 .errorState {
   text-align: center;
   padding: 60px 20px;
-  color: #ef4444;
+  color: var(--status-error-fg);
   font-size: 16px;
   font-weight: 500;
+  background: var(--status-error-bg);
+  border-radius: 18px;
+  border: 1px solid var(--hairline-rule);
 }
 
-/* ---------- MODALS / OVERLAYS ---------- */
+/* ================================================================== */
+/* ---------------------------- MODALS / OVERLAYS ------------------- */
+/* ================================================================== */
+
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: var(--overlay);
+  background: var(--backdrop-dim);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -1085,15 +1053,15 @@ svg {
 }
 
 .modalContent {
-  background: linear-gradient(180deg, var(--modal-bg-1) 0%, var(--modal-bg-2) 100%);
-  color: var(--text-primary);
-  border-radius: 28px;
-  padding: 32px 26px 26px;
+  background: linear-gradient(180deg, var(--modal-surface-top) 0%, var(--modal-surface-bottom) 100%);
+  color: var(--text-body);
+  border-radius: 26px;
+  padding: 30px 24px 24px;
   max-width: 380px;
   width: 100%;
   text-align: center;
-  box-shadow: var(--shadow-modal);
-  border: 1px solid var(--divider);
+  box-shadow: var(--shadow-modal-float);
+  border: 1px solid var(--hairline-rule);
   animation: slideUp 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -1111,20 +1079,27 @@ svg {
 .modalIcon {
   font-size: 48px;
   margin-bottom: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+.modalIcon svg {
+  stroke: var(--accent-core);
+  color: var(--accent-core);
 }
 
 .modalTitle {
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-body);
   margin-bottom: 8px;
 }
 
 .modalDescription {
-  color: var(--text-muted);
-  font-size: 14.5px;
+  color: var(--text-dim);
+  font-size: 14px;
   line-height: 1.55;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 
 .modalButtons {
@@ -1138,31 +1113,38 @@ svg {
   border: none;
   border-radius: 14px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 500;
   cursor: pointer;
   transition: 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .modalBtn:hover {
   transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .modalBtn:active {
   transform: translateY(0);
+  filter: brightness(0.98);
 }
 
 .modalBtnDeny {
-  background: var(--btn-deny-bg);
-  color: var(--btn-deny-text);
+  background: var(--deny-button-bg);
+  color: var(--deny-button-text);
 }
 
 .modalBtnDeny:hover {
-  background: var(--surface-hover);
+  background: var(--glass-panel-hover);
+  filter: none;
 }
 
 .modalBtnAllow {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(135deg, var(--accent-core), var(--accent-soft));
   color: white;
 }
 
@@ -1170,10 +1152,13 @@ svg {
   filter: brightness(1.08);
 }
 
-/* ---------- TOASTS ---------- */
+/* ================================================================== */
+/* ---------------------------- TOAST STACK ------------------------- */
+/* ================================================================== */
+
 .toastStack {
   position: fixed;
-  top: 24px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -1190,12 +1175,31 @@ svg {
   display: flex;
   align-items: center;
   gap: 10px;
-  backdrop-filter: blur(10px);
-  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-body);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
   font-size: 14px;
   animation: toastIn 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
   pointer-events: auto;
+  border: 1px solid var(--hairline-rule);
+  background: linear-gradient(180deg, var(--modal-surface-top), var(--modal-surface-bottom));
+}
+
+.toastCard.toast-success {
+  border-left: 3px solid var(--status-success-fg);
+}
+
+.toastCard.toast-error {
+  border-left: 3px solid var(--status-error-fg);
+}
+
+.toastCard.toast-warning {
+  border-left: 3px solid var(--status-warning-fg);
+}
+
+.toastCard.toast-info {
+  border-left: 3px solid var(--status-info-fg);
 }
 
 @keyframes toastIn {
@@ -1210,17 +1214,35 @@ svg {
 }
 
 .toastIcon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  color: var(--text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 13px;
   flex-shrink: 0;
+}
+
+.toast-success .toastIcon {
+  background: var(--status-success-bg);
+  color: var(--status-success-fg);
+}
+
+.toast-error .toastIcon {
+  background: var(--status-error-bg);
+  color: var(--status-error-fg);
+}
+
+.toast-warning .toastIcon {
+  background: var(--status-warning-bg);
+  color: var(--status-warning-fg);
+}
+
+.toast-info .toastIcon {
+  background: var(--status-info-bg);
+  color: var(--status-info-fg);
 }
 
 .toastMsg {
@@ -1232,7 +1254,7 @@ svg {
 .toastClose {
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
@@ -1242,15 +1264,18 @@ svg {
 }
 
 .toastClose:hover {
-  background: var(--surface-strong);
-  color: var(--text-primary);
+  background: var(--glass-panel-strong);
+  color: var(--text-body);
 }
 
-/* ---------- DRAWER (LOCATIONS) ---------- */
+/* ================================================================== */
+/* ---------------------------- LOCATIONS DRAWER -------------------- */
+/* ================================================================== */
+
 .drawerBackdrop {
   position: fixed;
   inset: 0;
-  background: var(--overlay);
+  background: var(--backdrop-dim);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
@@ -1271,16 +1296,16 @@ svg {
   width: min(340px, 88vw);
   max-width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, var(--modal-bg-1) 0%, var(--modal-bg-2) 100%);
-  color: var(--text-primary);
+  background: linear-gradient(180deg, var(--modal-surface-top) 0%, var(--modal-surface-bottom) 100%);
+  color: var(--text-body);
   z-index: 90;
   transform: translateX(-100%);
   transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
   display: flex;
   flex-direction: column;
-  padding: 18px 16px 16px;
+  padding: 16px 14px 14px;
   box-shadow: 12px 0 40px rgba(0, 0, 0, 0.2);
-  border-right: 1px solid var(--divider);
+  border-right: 1px solid var(--hairline-rule);
 }
 
 .locationsDrawer.open {
@@ -1291,21 +1316,12 @@ svg {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 4px 14px;
+  padding: 6px 4px 12px;
 }
 
 .drawerHeader h3 {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 600;
-}
-
-.drawerFooter {
-  margin-top: auto;
-  padding: 14px 4px 6px;
-  color: var(--text-extra-muted);
-  font-size: 12px;
-  line-height: 1.45;
-  border-top: 1px dashed var(--divider);
 }
 
 .searchRowBtn {
@@ -1314,37 +1330,42 @@ svg {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: var(--surface);
-  border: 1px dashed var(--divider);
+  background: var(--glass-panel);
+  border: 1px dashed var(--hairline-rule);
   border-radius: 14px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   text-align: left;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+}
+
+.searchRowBtn svg {
+  stroke: currentColor;
 }
 
 .searchRowBtn:hover {
-  background: var(--surface-strong);
-  color: var(--text-primary);
-  border-color: var(--accent-primary);
+  background: var(--glass-panel-strong);
+  color: var(--text-body);
+  border-color: var(--accent-core);
 }
 
 .emptyHint {
-  color: var(--text-muted);
-  padding: 18px 6px;
+  color: var(--text-dim);
+  padding: 16px 6px;
   text-align: center;
   font-size: 13.5px;
+  line-height: 1.5;
 }
 
 .locationsList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   overflow-y: auto;
   padding-right: 2px;
 }
@@ -1358,12 +1379,12 @@ svg {
 }
 
 .locItem:hover {
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
 }
 
 .locItem.active {
-  background: var(--loc-active-bg);
-  box-shadow: inset 0 0 0 1px var(--accent-soft);
+  background: var(--active-location-bg);
+  box-shadow: inset 0 0 0 1px var(--accent-pill);
 }
 
 .locItemBtn {
@@ -1389,25 +1410,21 @@ svg {
   flex-wrap: wrap;
 }
 
+.locNameRow svg {
+  stroke: currentColor;
+  color: var(--accent-core);
+}
+
 .locName {
-  color: var(--text-primary);
+  color: var(--text-body);
   font-weight: 600;
   font-size: 15px;
 }
 
-.locBadge {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-}
-
 .locCountry {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 12px;
+  margin-top: 2px;
 }
 
 .locTemp {
@@ -1418,21 +1435,23 @@ svg {
 
 .locTempVal {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-body);
   font-size: 15px;
 }
 
 .locTemp img {
   display: block;
+  width: 32px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .locRemove {
   border: none;
   background: transparent;
-  color: var(--text-extra-muted);
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  color: var(--text-faint);
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
   font-size: 20px;
   cursor: pointer;
   display: inline-flex;
@@ -1443,15 +1462,22 @@ svg {
   line-height: 1;
 }
 
-.locRemove:hover {
-  background: var(--error);
-  color: #ef4444;
+.locRemove svg {
+  stroke: currentColor;
 }
 
-/* ---------- SEARCH PANEL ---------- */
+.locRemove:hover {
+  background: var(--status-error-bg);
+  color: var(--status-error-fg);
+}
+
+/* ================================================================== */
+/* ---------------------------- SEARCH PANEL ------------------------ */
+/* ================================================================== */
+
 .searchPanel {
   max-width: 460px;
-  padding: 20px 18px 16px;
+  padding: 18px 16px 14px;
   text-align: left;
 }
 
@@ -1459,7 +1485,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .searchInputWrap {
@@ -1468,9 +1494,20 @@ svg {
   align-items: center;
   gap: 10px;
   padding: 12px 12px;
-  background: var(--search-input-bg);
+  background: var(--search-field-bg);
   border-radius: 14px;
-  color: var(--text-muted);
+  color: var(--text-dim);
+  border: 1px solid var(--hairline-rule);
+  transition: border-color 0.2s ease;
+}
+
+.searchInputWrap:focus-within {
+  border-color: var(--accent-core);
+}
+
+.searchInputWrap svg {
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .searchInputWrap input {
@@ -1478,19 +1515,19 @@ svg {
   background: transparent;
   border: none;
   outline: none;
-  color: var(--text-primary);
+  color: var(--text-body);
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14.5px;
 }
 
 .searchInputWrap input::placeholder {
-  color: var(--text-extra-muted);
+  color: var(--text-faint);
 }
 
 .textBtn {
   border: none;
   background: transparent;
-  color: var(--accent-primary);
+  color: var(--accent-core);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -1498,10 +1535,16 @@ svg {
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.textBtn svg {
+  stroke: currentColor;
 }
 
 .textBtn:hover {
-  background: var(--accent-soft);
+  background: var(--accent-pill);
 }
 
 .suggestionsList {
@@ -1522,7 +1565,7 @@ svg {
   border-radius: 12px;
   border: none;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--text-body);
   font-family: inherit;
   font-size: 14.5px;
   font-weight: 500;
@@ -1531,8 +1574,14 @@ svg {
   transition: background 0.15s ease;
 }
 
+.suggestBtn svg {
+  stroke: currentColor;
+  color: var(--accent-core);
+  flex-shrink: 0;
+}
+
 .suggestBtn:hover {
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
 }
 
 .suggestText {
@@ -1544,46 +1593,55 @@ svg {
 
 .suggestText strong {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-body);
 }
 
 .suggestText small {
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 12.5px;
   font-weight: 400;
 }
 
 .suggestHint,
 .suggestError {
-  padding: 14px 12px;
+  padding: 12px;
   border-radius: 12px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-size: 13.5px;
-  background: var(--surface);
+  background: var(--glass-panel);
   line-height: 1.45;
 }
 
 .suggestError {
-  color: #ef4444;
-  background: var(--error);
+  color: var(--status-error-fg);
+  background: var(--status-error-bg);
   font-weight: 500;
 }
 
-.spinSvg {
-  animation: spin 0.9s linear infinite;
-  transform-origin: center;
-}
+/* ================================================================== */
+/* ---------------------------- SETTINGS PANEL ---------------------- */
+/* ================================================================== */
 
-/* ---------- SETTINGS ---------- */
 .settingsPanel {
   max-width: 420px;
-  padding: 22px 22px 18px;
+  padding: 20px 20px 16px;
   text-align: left;
+}
+
+.settingsPanel .drawerHeader h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settingsPanel .drawerHeader svg {
+  stroke: currentColor;
+  color: var(--accent-core);
 }
 
 .settingsGroup {
   padding: 12px 0;
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--hairline-rule);
 }
 
 .settingsGroup:last-of-type {
@@ -1594,100 +1652,118 @@ svg {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-secondary);
-  font-size: 13px;
+  color: var(--text-subtle);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
   margin-bottom: 12px;
+}
+
+.settingsGroupLabel svg {
+  stroke: currentColor;
+  color: var(--accent-core);
 }
 
 .segmentedControl {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  background: var(--surface);
-  padding: 6px;
-  border-radius: 14px;
+  background: var(--glass-panel);
+  padding: 5px;
+  border-radius: 13px;
+  border: 1px solid var(--hairline-rule);
 }
 
 .segBtn {
-  padding: 12px 10px;
+  padding: 11px 10px;
   border: none;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-subtle);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   border-radius: 10px;
   transition: background 0.2s, color 0.2s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.segBtn svg {
+  stroke: currentColor;
 }
 
 .segBtn:hover {
-  color: var(--text-primary);
+  color: var(--text-body);
 }
 
 .segBtn.active {
-  background: var(--accent-soft);
-  color: var(--accent-primary);
-  box-shadow: inset 0 0 0 1px var(--accent-soft);
+  background: var(--accent-pill);
+  color: var(--accent-core);
+  box-shadow: inset 0 0 0 1px var(--accent-pill);
   font-weight: 600;
 }
 
 .settingsGroup.privacy .privacyNote {
-  color: var(--text-muted);
-  font-size: 13.5px;
+  color: var(--text-dim);
+  font-size: 13px;
   line-height: 1.55;
 }
 
-/* ---------- AIR CONDITIONS / DETAILS ---------- */
+/* ================================================================== */
+/* ---------------------------- AIR CONDITIONS ---------------------- */
+/* ================================================================== */
+
 .airConditions {
-  margin-top: 28px;
-  padding: 0 6px 10px;
+  margin-top: 0;
+  padding: 0;
 }
 
 .airGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .airCard {
-  background: var(--surface);
+  background: var(--glass-panel);
   border-radius: 18px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid var(--divider);
+  border: 1px solid var(--hairline-rule);
   transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .airCard:hover {
-  background: var(--surface-strong);
+  background: var(--glass-panel-strong);
   transform: translateY(-1px);
 }
 
 .airCard.airCardSpan {
   grid-column: span 2;
-  padding: 14px 16px;
+  padding: 16px 18px;
 }
 
 .airCardHead {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-muted);
-  font-size: 12.5px;
+  color: var(--text-dim);
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.15px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
 }
 
 .airCard h3 {
   font-size: 22px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-body);
   margin: 2px 0 0;
   line-height: 1.1;
 }
@@ -1695,7 +1771,7 @@ svg {
 .sunRow {
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
 }
 
@@ -1708,124 +1784,135 @@ svg {
 
 .sunCell h3 {
   margin: 0;
+  font-size: 20px;
 }
 
 .sunDivider {
   align-self: stretch;
   width: 1px;
-  background: var(--divider);
+  background: var(--hairline-rule);
 }
 
-.rangeRow {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.rangeLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-muted);
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.15px;
-}
-
-.rangeValues {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-}
-
-.rangeLow {
-  color: var(--accent-secondary);
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.rangeHigh {
-  color: #f59e0b;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.rangeBar {
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent-secondary), var(--phone-glow), #f59e0b);
-  opacity: 0.55;
-  overflow: hidden;
-  position: relative;
-}
-
-.rangeFill {
-  position: absolute;
-  left: 8%;
-  width: 84%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary), #f59e0b);
-  border-radius: 999px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-}
-
-/* ---------- RESPONSIVE BREAKPOINTS ---------- */
+/* ================================================================== */
+/* ---------------------------- RESPONSIVE -------------------------- */
+/* ================================================================== */
 
 /* 1200px and up */
 @media (min-width: 1200px) {
-  body {
-    align-items: center;
-    min-height: 100vh;
-    padding: 40px;
+  .websiteMain {
+    padding: 32px 40px 80px;
   }
 
-  .phoneContainer {
-    max-width: 460px;
-    min-height: 900px;
-  }
-
-  .weatherStats {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .hideSm {
-    display: flex;
+  .navLocation {
+    display: inline-flex;
   }
 }
 
-/* 1024px */
-@media (max-width: 1024px) {
-  body {
-    padding: 24px;
+/* 1100px */
+@media (max-width: 1100px) {
+  .websiteMain {
+    grid-template-columns: 1fr;
   }
 
-  .phoneContainer {
-    min-height: 860px;
+  .websiteSidebar {
+    position: static;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .currentWeather {
+    align-items: center;
+    text-align: center;
+  }
+
+  .currentWeather .locationBlock {
+    text-align: center;
   }
 }
 
 /* 768px */
 @media (max-width: 768px) {
-  body {
-    padding: 20px;
-    align-items: flex-start;
+  .websiteMain {
+    padding: 20px 18px 60px;
+    gap: 20px;
   }
 
-  .phoneContainer {
-    max-width: 460px;
+  .topNavInner {
+    padding: 10px 18px;
   }
 
-  .weatherStats {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .statCard.hideSm {
+  .navLocation {
     display: none;
   }
 
+  .navSpacer {
+    display: none;
+  }
+
+  .weatherStats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .statCard {
+    padding: 12px 6px;
+  }
+
+  .statValue {
+    font-size: 15px;
+  }
+
   .weatherIcon img {
-    width: 220px;
+    width: 160px;
+  }
+
+  .weatherInfo h1 {
+    font-size: 80px;
+    letter-spacing: -2px;
+  }
+
+  .currentHero {
+    padding: 22px 20px;
+    border-radius: 20px;
+  }
+
+  .sectionCard {
+    padding: 18px 18px;
+    border-radius: 18px;
+  }
+}
+
+/* 560px */
+@media (max-width: 560px) {
+  .weatherStats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .heroSideCards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .airGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .airCard.airCardSpan {
+    grid-column: span 1;
+  }
+
+  .forecastItemExtended {
+    grid-template-columns: 76px 54px 1fr;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .tempRangeWrap {
+    grid-template-columns: 36px 1fr 36px;
+    gap: 8px;
   }
 }
 
@@ -1833,83 +1920,17 @@ svg {
 @media (max-width: 480px) {
   body {
     padding: 0;
-    background: var(--modal-bg-2);
+    background: var(--modal-surface-bottom);
   }
 
-  .phoneContainer {
-    max-width: 100%;
-    min-height: 100vh;
-    border-radius: 0;
-    padding: 14px 18px 24px;
-    box-shadow: none;
-    border: none;
+  .websiteFooter {
+    padding: 16px 18px 20px;
+    font-size: 12px;
   }
 
-  .phoneContainer::before {
-    width: 100px;
-  }
-
-  .header {
-    padding-top: 24px;
-  }
-
-  .weatherText h1 {
-    font-size: 88px;
-  }
-
-  .weatherIcon img {
-    width: 200px;
-  }
-
-  .statValue {
-    font-size: 14.5px;
-  }
-
-  .hourCard {
-    min-width: 80px;
-    padding: 14px 8px;
-  }
-
-  .hourCard img {
-    width: 42px;
-  }
-
-  .forecastList {
-    padding: 4px 14px;
-    border-radius: 20px;
-  }
-
-  .forecastTabs {
-    align-self: center;
-  }
-
-  .forecastItemExtended {
-    grid-template-columns: 76px 56px 1fr;
-    gap: 10px;
-  }
-
-  .tempRangeWrap {
-    grid-template-columns: 38px 1fr 38px;
+  .topNavInner {
+    padding: 10px 14px;
     gap: 8px;
-  }
-
-  .airCard {
-    padding: 12px 14px;
-  }
-
-  .airCard h3 {
-    font-size: 20px;
-  }
-}
-
-/* 320px */
-@media (max-width: 320px) {
-  .phoneContainer {
-    padding: 12px 12px 20px;
-  }
-
-  .header {
-    padding: 20px 2px 14px;
   }
 
   .iconBtn {
@@ -1918,65 +1939,61 @@ svg {
     border-radius: 12px;
   }
 
-  .locationLabel {
-    font-size: 18px;
-  }
-
-  .weatherText h1 {
+  .weatherInfo h1 {
     font-size: 72px;
   }
 
   .weatherIcon img {
-    width: 160px;
+    width: 140px;
   }
 
-  .weatherStats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
+  .hourCard {
+    min-width: 76px;
+    padding: 14px 8px;
+    border-radius: 16px;
   }
 
-  .statCard {
-    padding: 10px 4px;
+  .hourCard img {
+    width: 40px;
   }
 
-  .statLabel {
-    font-size: 11.5px;
+  .forecastList {
+    padding: 4px 14px;
+    border-radius: 18px;
   }
 
-  .forecastItem {
-    gap: 8px;
-    padding: 10px 0;
-  }
-
-  .forecastDay {
-    font-size: 13.5px;
-  }
-
-  .forecastTemp {
-    font-size: 14px;
+  .forecastTabs {
+    align-self: center;
   }
 
   .tabBtn {
-    padding: 7px 10px;
+    padding: 7px 12px;
     font-size: 12.5px;
   }
 
-  .modalContent {
-    padding: 26px 20px 22px;
-    border-radius: 22px;
-  }
-
-  .airGrid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .airCard.airCardSpan {
-    grid-column: span 1;
+  .airCard {
+    padding: 14px 16px;
+    border-radius: 16px;
   }
 
   .airCard h3 {
     font-size: 19px;
+  }
+
+  .modalContent {
+    padding: 24px 18px 20px;
+    border-radius: 22px;
+  }
+}
+
+/* 380px */
+@media (max-width: 380px) {
+  .statValue {
+    font-size: 14px;
+  }
+
+  .statLabel {
+    font-size: 11px;
   }
 
   .forecastItemExtended {
@@ -1990,11 +2007,70 @@ svg {
   }
 
   .tempRangeWrap {
-    grid-template-columns: 36px 1fr 36px;
+    grid-template-columns: 34px 1fr 34px;
+    gap: 8px;
   }
 }
 
-/* ---------- GENERAL CURSOR RULES ---------- */
+/* 320px */
+@media (max-width: 320px) {
+  .websiteMain {
+    padding: 14px 12px 48px;
+  }
+
+  .topNavInner {
+    padding: 10px 10px;
+  }
+
+  .brandName {
+    font-size: 16px;
+  }
+
+  .brandTag {
+    display: none;
+  }
+
+  .weatherInfo h1 {
+    font-size: 64px;
+    letter-spacing: -1.5px;
+  }
+
+  .weatherIcon img {
+    width: 120px;
+  }
+
+  .weatherStats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .statCard {
+    padding: 10px 4px;
+    border-radius: 14px;
+  }
+
+  .statLabel {
+    font-size: 11px;
+  }
+
+  .forecastItem {
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .forecastDay {
+    font-size: 13.5px;
+  }
+
+  .locationName {
+    font-size: 20px;
+  }
+}
+
+/* ================================================================== */
+/* ---------------------------- INTERACTION ------------------------- */
+/* ================================================================== */
+
 button,
 [role="button"],
 .clickable {
@@ -2006,10 +2082,35 @@ button,
   opacity: 0.55;
 }
 
-/* Focus outline improvements for accessibility */
 button:focus-visible,
 input:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--accent-primary);
+  outline: 2px solid var(--accent-core);
   outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-pill);
+  color: var(--accent-core);
+}
+
+/* Custom scrollbar (desktop) */
+@media (pointer: fine) and (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--glass-panel-strong);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--glass-panel-hover);
+  }
 }
