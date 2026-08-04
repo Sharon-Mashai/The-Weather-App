@@ -1,160 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-/* ---------- [1] PAGE FOUNDATION ---------- */
-:root,
-:root[data-theme="dark"] {
-  --page-background: #1a1a2e;
-  --page-background-grad: linear-gradient(180deg, #1a1a2e 0%, #0f1424 100%);
+/* ===========================
+   Theme Button Styling
+=========================== */
 
-  /* ---------- [2] CARD SURFACE ---------- */
-  --card-gradient-top: #1a2238;
-  --card-gradient-mid: #0f1424;
-  --card-gradient-bottom: #0b0f1e;
-  --card-edge-stroke: rgba(255, 255, 255, 0.05);
-
-  /* ---------- [3] ATMOSPHERIC GLOW ---------- */
-  --sunset-radial-glow: rgba(255, 170, 60, 0.28);
-  --hero-radial-blue: rgba(135, 206, 250, 0.22);
-
-  /* ---------- [4] TEXT RAMP ---------- */
-  --text-body: #ffffff;
-  --text-subtle: #d1d5db;
-  --text-dim: #9ca3af;
-  --text-faint: #6b7280;
-
-  /* ---------- [5] GLASS PANELS ---------- */
-  --glass-panel: rgba(255, 255, 255, 0.05);
-  --glass-panel-strong: rgba(255, 255, 255, 0.08);
-  --glass-panel-hover: rgba(255, 255, 255, 0.12);
-  --glass-panel-active: rgba(255, 255, 255, 0.16);
-  --hairline-rule: rgba(255, 255, 255, 0.08);
-
-  /* ---------- [6] ACCENT CARD ---------- */
-  --accent-gradient-card-1: rgba(135, 206, 250, 0.22);
-  --accent-gradient-card-2: rgba(255, 255, 255, 0.07);
-  --accent-card-edge: rgba(255, 255, 255, 0.12);
-
-  /* ---------- [7] ACCENT CORE ---------- */
-  --accent-core: #3b82f6;
-  --accent-soft: #60a5fa;
-  --accent-pill: rgba(59, 130, 246, 0.18);
-  --accent-temp-gradient: linear-gradient(90deg, #60a5fa 0%, #ffa63d 100%);
-
-  /* ---------- [8] STATUS INDICATORS ---------- */
-  --status-success-bg: rgba(34, 197, 94, 0.18);
-  --status-success-fg: #22c55e;
-  --status-error-bg: rgba(239, 68, 68, 0.18);
-  --status-error-fg: #ef4444;
-  --status-warning-bg: rgba(245, 158, 11, 0.18);
-  --status-warning-fg: #f59e0b;
-  --status-info-bg: rgba(59, 130, 246, 0.18);
-  --status-info-fg: #3b82f6;
-
-  /* ---------- [9] SHADOW LAYER ---------- */
-  --shadow-card-stack: 0 30px 80px rgba(0, 0, 0, 0.5);
-  --shadow-modal-float: 0 25px 70px rgba(0, 0, 0, 0.5);
-  --shadow-glow-soft: 0 30px 60px -40px rgba(0, 0, 0, 0.55);
-
-  /* ---------- [10] MODAL SHEET ---------- */
-  --modal-surface-top: #1e2740;
-  --modal-surface-bottom: #141a2c;
-  --backdrop-dim: rgba(0, 0, 0, 0.65);
-
-  /* ---------- [11] SEARCH FIELD ---------- */
-  --search-field-bg: rgba(255, 255, 255, 0.06);
-
-  /* ---------- [12] DIALOG ACTIONS ---------- */
-  --deny-button-bg: rgba(255, 255, 255, 0.08);
-  --deny-button-text: #d1d5db;
-
-  /* ---------- [13] LOCATION NAV ---------- */
-  --active-location-bg: rgba(59, 130, 246, 0.12);
-
-  /* ---------- [14] ICON STROKE ---------- */
-  --icon-stroke-color: white;
-  --icon-fill-color: none;
+[data-theme="dark"] .segBtn {
+  background-color: #252525;
+  border-color: #404040;
+  color: #dcdcdc;
 }
 
-/* ================================================================== */
-/* ---------------------------- LIGHT THEME ------------------------- */
-/* ================================================================== */
-
-:root[data-theme="light"] {
-  /* ---------- [1] PAGE FOUNDATION ---------- */
-  --page-background: linear-gradient(180deg, #e0ecff 0%, #f5f7fc 100%);
-  --page-background-grad: linear-gradient(180deg, #e0ecff 0%, #f5f7fc 100%);
-
-  /* ---------- [2] CARD SURFACE ---------- */
-  --card-gradient-top: #f8fbff;
-  --card-gradient-mid: #e9f0fb;
-  --card-gradient-bottom: #dde7f5;
-  --card-edge-stroke: rgba(30, 64, 175, 0.08);
-
-  /* ---------- [3] ATMOSPHERIC GLOW ---------- */
-  --sunset-radial-glow: rgba(255, 170, 60, 0.2);
-  --hero-radial-blue: rgba(59, 130, 246, 0.25);
-
-  /* ---------- [4] TEXT RAMP ---------- */
-  --text-body: #0f172a;
-  --text-subtle: #334155;
-  --text-dim: #64748b;
-  --text-faint: #94a3b8;
-
-  /* ---------- [5] GLASS PANELS ---------- */
-  --glass-panel: rgba(15, 23, 42, 0.05);
-  --glass-panel-strong: rgba(15, 23, 42, 0.08);
-  --glass-panel-hover: rgba(15, 23, 42, 0.12);
-  --glass-panel-active: rgba(15, 23, 42, 0.16);
-  --hairline-rule: rgba(15, 23, 42, 0.08);
-
-  /* ---------- [6] ACCENT CARD ---------- */
-  --accent-gradient-card-1: rgba(59, 130, 246, 0.25);
-  --accent-gradient-card-2: rgba(255, 255, 255, 0.6);
-  --accent-card-edge: rgba(59, 130, 246, 0.25);
-
-  /* ---------- [7] ACCENT CORE ---------- */
-  --accent-core: #2563eb;
-  --accent-soft: #3b82f6;
-  --accent-pill: rgba(37, 99, 235, 0.14);
-
-  /* ---------- [8] STATUS INDICATORS ---------- */
-  --status-success-bg: rgba(22, 163, 74, 0.14);
-  --status-success-fg: #16a34a;
-  --status-error-bg: rgba(220, 38, 38, 0.14);
-  --status-error-fg: #dc2626;
-  --status-warning-bg: rgba(217, 119, 6, 0.14);
-  --status-warning-fg: #d97706;
-  --status-info-bg: rgba(37, 99, 235, 0.14);
-  --status-info-fg: #2563eb;
-
-  /* ---------- [9] SHADOW LAYER ---------- */
-  --shadow-card-stack: 0 25px 70px rgba(15, 23, 42, 0.18);
-  --shadow-modal-float: 0 20px 60px rgba(15, 23, 42, 0.22);
-  --shadow-glow-soft: 0 20px 50px -30px rgba(15, 23, 42, 0.35);
-
-  /* ---------- [10] MODAL SHEET ---------- */
-  --modal-surface-top: #ffffff;
-  --modal-surface-bottom: #f5f7fc;
-  --backdrop-dim: rgba(15, 23, 42, 0.5);
-
-  /* ---------- [11] SEARCH FIELD ---------- */
-  --search-field-bg: rgba(15, 23, 42, 0.06);
-
-  /* ---------- [12] DIALOG ACTIONS ---------- */
-  --deny-button-bg: rgba(15, 23, 42, 0.08);
-  --deny-button-text: #334155;
-
-  /* ---------- [13] LOCATION NAV ---------- */
-  --active-location-bg: rgba(37, 99, 235, 0.12);
-
-  /* ---------- [14] ICON STROKE ---------- */
-  --icon-stroke-color: #0f172a;
-  --icon-fill-color: none;
+[data-theme="dark"] .segBtn:hover {
+  background-color: #333333;
 }
 
-/* ================================================================== */
-/* ---------------------------- GLOBAL RESET ------------------------ */
-/* ================================================================== */
+[data-theme="dark"] .segBtn.active {
+  background-color: #3d4c63;
+  border-color: #6fa8ff;
+  color: #ffffff;
+}
+
+[data-theme="light"] .segBtn.active {
+  background-color: #ffe08a;
+  border-color: #ffc107;
+  color: #5c4200;
+}
+
+/* ===========================
+   Global Reset
+=========================== */
 
 * {
   margin: 0;
@@ -168,9 +42,83 @@ body,
   min-height: 100%;
 }
 
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/*Light Theme*/
+
+[data-theme="light"] body {
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color:#E3F5FF;
+  color: #222222;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: block;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Theme*/
+
+[data-theme="dark"] body {
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: #383640;
+  color: #ffffff;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: block;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================
+   Icons
+=========================== */
+
+svg {
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===========================
+   Headings
+=========================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+html,
+body,
+:root,
+:root[data-theme="dark"],
+:root[data-theme="light"] {
+  min-height: 100%;
+}
+
 body {
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: var(--page-background);
+  
   color: var(--text-body);
   overflow-x: hidden;
   min-height: 100vh;
@@ -181,7 +129,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
+:root,
+:root[data-theme="dark"],
+:root[data-theme="light"] {
   width: 100%;
   min-height: 100vh;
   display: block;

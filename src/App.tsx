@@ -31,6 +31,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<number | undefined>(undefined);
+  const [hasShownDefaultLocation, setHasShownDefaultLocation] = useState(false);
 
 
   const [forecastTab, setForecastTab] =
@@ -238,24 +239,28 @@ export default function App() {
     if (initializedRef.current) return;
     initializedRef.current = true;
 
-    const timer = window.setTimeout(() => {
+    const timer = window.setTimeout(async () => {
+      if (!hasShownDefaultLocation) {
+        await loadWeatherByCoords(
+          JOHANNESBURG_COORDS.lat,
+          JOHANNESBURG_COORDS.lon,
+          "Johannesburg"
+        );
+        setHasShownDefaultLocation(true);
+      }
+
       if (permissionState === "granted") {
         showNotification("Using your current location.", "info");
         void loadCurrentLocation();
       } else if (permissionState === "denied") {
         showNotification("Location access denied. Using Johannesburg instead.", "warning");
-        void loadWeatherByCoords(
-          JOHANNESBURG_COORDS.lat,
-          JOHANNESBURG_COORDS.lon,
-          "Johannesburg"
-        );
       } else {
         setPermissionOpen(true);
       }
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [permissionState, loadCurrentLocation, loadWeatherByCoords, showNotification]);
+  }, [permissionState, loadCurrentLocation, loadWeatherByCoords, showNotification, hasShownDefaultLocation]);
 
 
   const handleAllowLocation = async () => {
