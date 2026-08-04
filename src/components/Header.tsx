@@ -5,12 +5,9 @@ import {Menu01Icon,Search01Icon,Settings02Icon,Location01Icon} from "@hugeicons/
 interface HeaderProps {
   city: string;
   country?: string;
-
   onMenuClick: () => void;
   onSearchClick: () => void;
   onSettingsClick: () => void;
-
-  isOffline: boolean;
   lastUpdated?: number;
 }
 
@@ -27,20 +24,15 @@ function Header({
 
       <div className="topNavInner">
 
-        {/* Left */}
-
         <button
           className="iconBtn"
           onClick={onMenuClick}
           aria-label="Open saved locations"
         >
-          <HugeiconsIcon
-            icon={Menu01Icon}
-            size={22}
-          />
+          <HugeiconsIcon icon={Menu01Icon}  size={22} />
         </button>
 
-        {/* Logo */}
+   
 
         <div className="navBrand">
 
@@ -62,8 +54,6 @@ function Header({
         </div>
 
         <div className="navSpacer" />
-
-        {/* Current Location */}
 
         <div className="navLocation">
 
@@ -88,33 +78,16 @@ function Header({
 
         </div>
 
-        {/* Search */}
 
-        <button
-          className="iconBtn"
-          onClick={onSearchClick}
-          aria-label="Search city"
-        >
+        <button className="iconBtn" onClick={onSearchClick} aria-label="Search city" >
 
-          <HugeiconsIcon
-            icon={Search01Icon}
-            size={22}
-          />
+          <HugeiconsIcon icon={Search01Icon} size={22} />
 
         </button>
 
-        {/* Settings */}
+        <button className="iconBtn" onClick={onSettingsClick} aria-label="Settings" >
 
-        <button
-          className="iconBtn"
-          onClick={onSettingsClick}
-          aria-label="Settings"
-        >
-
-          <HugeiconsIcon
-            icon={Settings02Icon}
-            size={22}
-          />
+          <HugeiconsIcon  icon={Settings02Icon} size={22} />
 
         </button>
 

@@ -26,42 +26,11 @@ type PermissionState = "prompt" | "granted" | "denied";
 export default function App() {
 
 
-  function readCachedWeather(): {
-    weather: WeatherData | null;
-    forecast: ForecastData | null;
-    savedAt: number | undefined;
-    isOffline: boolean;
-  } {
-    if (typeof window === "undefined") {
-      return { weather: null, forecast: null, savedAt: undefined, isOffline: false };
-    }
-    const raw = window.localStorage.getItem("lastWeather");
-    if (!raw) {
-      return { weather: null, forecast: null, savedAt: undefined, isOffline: false };
-    }
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed.weather && parsed.forecast) {
-        return {
-          weather: parsed.weather as WeatherData,
-          forecast: parsed.forecast as ForecastData,
-          savedAt: typeof parsed.savedAt === "number" ? parsed.savedAt : undefined,
-          isOffline: true,
-        };
-      }
-    } catch {
-   /* */
-    }
-    return { weather: null, forecast: null, savedAt: undefined, isOffline: false };
-  }
-
-  const [cachedInitial] = useState(readCachedWeather);
-  const [weather, setWeather] = useState<WeatherData | null>(cachedInitial.weather);
-  const [forecast, setForecast] = useState<ForecastData | null>(cachedInitial.forecast);
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [offline, setOffline] = useState(cachedInitial.isOffline);
-  const [lastUpdated, setLastUpdated] = useState<number | undefined>(cachedInitial.savedAt);
+  const [lastUpdated, setLastUpdated] = useState<number | undefined>(undefined);
 
 
   const [forecastTab, setForecastTab] =
@@ -146,7 +115,6 @@ export default function App() {
         setWeather(weatherData);
         setForecast(forecastData);
         setActiveCity(weatherData.name);
-        setOffline(false);
         setLastUpdated(Date.now());
 
         localStorage.setItem(
@@ -161,26 +129,13 @@ export default function App() {
 
         return true;
       } catch {
-        const cached = localStorage.getItem("lastWeather");
-        if (cached) {
-          const data = JSON.parse(cached);
-          setWeather(data.weather);
-          setForecast(data.forecast);
-          setOffline(true);
-          showNotification(
-            "Offline mode. Showing cached weather.",
-            "warning"
-          );
-          return true;
-        } else {
-          setError("Unable to load weather.");
-          return false;
-        }
+        setError("Unable to load weather.");
+        return false;
       } finally {
         setLoading(false);
       }
     },
-    [setActiveCity, showNotification]
+    [setActiveCity]
   );
 
   const loadWeatherByCity = useCallback(
@@ -197,7 +152,6 @@ export default function App() {
         setWeather(weatherData);
         setForecast(forecastData);
         setActiveCity(weatherData.name);
-        setOffline(false);
         setLastUpdated(Date.now());
 
         localStorage.setItem(
@@ -212,26 +166,13 @@ export default function App() {
 
         return true;
       } catch {
-        const cached = localStorage.getItem("lastWeather");
-        if (cached) {
-          const data = JSON.parse(cached);
-          setWeather(data.weather);
-          setForecast(data.forecast);
-          setOffline(true);
-          showNotification(
-            "Offline mode. Showing cached weather.",
-            "warning"
-          );
-          return true;
-        } else {
-          setError("Unable to load weather.");
-          return false;
-        }
+        setError("Unable to load weather.");
+        return false;
       } finally {
         setLoading(false);
       }
     },
-    [setActiveCity, showNotification]
+    [setActiveCity]
   );
 
   const initializedRef = useRef(false);
@@ -408,14 +349,13 @@ export default function App() {
   return (
     <div className="app">
       <div className="websiteShell">
-        {/* ---------- Top Navigation ---------- */}
+      
         <Header
           city={weather ? weather.name : activeCity}
           country={weather?.sys?.country}
           onMenuClick={() => setDrawerOpen(true)}
           onSearchClick={() => setSearchOpen(true)}
           onSettingsClick={() => setSettingsOpen(true)}
-          isOffline={offline}
           lastUpdated={lastUpdated}
         />
 
@@ -491,7 +431,7 @@ export default function App() {
                   </div>
                 </section>
 
-                {/*Forecast Section */}
+           
                 <section className="sectionCard">
                   <div className="sectionHeading">
                     <div className="titleWrap">
@@ -516,7 +456,7 @@ export default function App() {
                   )}
                 </section>
 
-                {/*Air Conditions */}
+          
                 {weather && forecast && (
                   <AirConditions
                     weather={weather}
