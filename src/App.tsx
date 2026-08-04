@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import "./global.css";
-
 import Header from "./components/Header";
 import CurrentWeather from "./components/CurrentWeather";
 import WeatherStats from "./components/WeatherStats";
@@ -11,25 +9,13 @@ import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
 import SearchOverlay from "./components/SearchOverlay";
 import SettingsPanel from "./components/SettingsPanel";
-import LocationsDrawer, {
-  type SavedLocation,
-} from "./components/LocationsDrawer";
+import LocationsDrawer, { type SavedLocation,} from "./components/LocationsDrawer";
 import { ToastStack, type ToastItem, type ToastKind } from "./components/ToastStack";
 import Loading from "./components/Loading";
 import LocationPermission from "./components/LocationPermission";
-
-import {
-  getCurrentWeather,
-  getForecast,
-} from "./services/weatherApi";
-
-import type {
-  WeatherData,
-  ForecastData,
-} from "./types/weather";
-
+import { getCurrentWeather,getForecast,} from "./services/weatherApi";
+import type { WeatherData, ForecastData,} from "./types/weather";
 import type { TemperatureUnit } from "./utils/weather";
-
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 const DEFAULT_CITY = "Polokwane";
@@ -38,7 +24,7 @@ const JOHANNESBURG_COORDS = { lat: -26.2041, lon: 28.0473 };
 type PermissionState = "prompt" | "granted" | "denied";
 
 export default function App() {
-  /* ---------- Core Data ---------- */
+
 
   function readCachedWeather(): {
     weather: WeatherData | null;
@@ -64,7 +50,7 @@ export default function App() {
         };
       }
     } catch {
-      /* ignore malformed cache */
+   /* */
     }
     return { weather: null, forecast: null, savedAt: undefined, isOffline: false };
   }
@@ -77,7 +63,6 @@ export default function App() {
   const [offline, setOffline] = useState(cachedInitial.isOffline);
   const [lastUpdated, setLastUpdated] = useState<number | undefined>(cachedInitial.savedAt);
 
-  /* ---------- UI State ---------- */
 
   const [forecastTab, setForecastTab] =
     useState<"hourly" | "weekly">("hourly");
@@ -87,7 +72,6 @@ export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [permissionOpen, setPermissionOpen] = useState(false);
 
-  /* ---------- Persisted Settings ---------- */
 
   const [unit, setUnit] =
     useLocalStorage<TemperatureUnit>("unit", "C");
@@ -103,8 +87,6 @@ export default function App() {
 
   const [permissionState, setPermissionState] =
     useLocalStorage<PermissionState>("locationPermission", "prompt");
-
-  /* ---------- Toasts ---------- */
 
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
@@ -126,8 +108,6 @@ export default function App() {
     []
   );
 
-  /* ---------- Active SavedLocation ID ---------- */
-
   const activeLocationId = useMemo(() => {
     if (!weather) return null;
     const found = savedLocations.find(
@@ -137,13 +117,11 @@ export default function App() {
     return found ? found.id : null;
   }, [savedLocations, weather]);
 
-  /* ---------- Theme ---------- */
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  /* ---------- Load Weather by Coords or City ---------- */
 
   const loadWeatherByCoords = useCallback(
     async (
@@ -256,9 +234,35 @@ export default function App() {
     [setActiveCity, showNotification]
   );
 
-  /* ---------- Initial Load with Permission Prompt ---------- */
-
   const initializedRef = useRef(false);
+
+  const requestBrowserNotifications = useCallback(async (): Promise<void> => {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      showNotification("Browser notifications are not supported on this device.", "warning");
+      return;
+    }
+
+    if (Notification.permission === "granted") {
+      showNotification("Browser notifications are enabled.", "success");
+      return;
+    }
+
+    if (Notification.permission === "denied") {
+      showNotification("Browser notifications were blocked. You can enable them in your browser settings.", "warning");
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        showNotification("Browser notifications enabled.", "success");
+      } else {
+        showNotification("Browser notifications were not allowed.", "warning");
+      }
+    } catch {
+      showNotification("Unable to request browser notifications right now.", "warning");
+    }
+  }, [showNotification]);
 
   const loadCurrentLocation = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -266,19 +270,8 @@ export default function App() {
 
     if (!navigator.geolocation) {
       await loadWeatherByCity(DEFAULT_CITY);
+      showNotification("Geolocation is unavailable. Showing Polokwane.", "warning");
       return;
-    }
-
-    if (
-      typeof window !== "undefined" &&
-      "Notification" in window &&
-      Notification.permission === "default"
-    ) {
-      try {
-        await Notification.requestPermission();
-      } catch {
-        // Ignore browser permission dialog cancellation.
-      }
     }
 
     navigator.geolocation.getCurrentPosition(
@@ -289,6 +282,7 @@ export default function App() {
         );
       },
       async () => {
+        showNotification("Using Johannesburg because location access was unavailable.", "warning");
         await loadWeatherByCoords(
           JOHANNESBURG_COORDS.lat,
           JOHANNESBURG_COORDS.lon,
@@ -297,7 +291,7 @@ export default function App() {
       },
       { timeout: 8000, maximumAge: 60000 }
     );
-  }, [loadWeatherByCoords, loadWeatherByCity]);
+  }, [loadWeatherByCoords, loadWeatherByCity, showNotification]);
 
   useEffect(() => {
     if (initializedRef.current) return;
@@ -305,9 +299,11 @@ export default function App() {
 
     const timer = window.setTimeout(() => {
       if (permissionState === "granted") {
-        loadCurrentLocation();
+        showNotification("Using your current location.", "info");
+        void loadCurrentLocation();
       } else if (permissionState === "denied") {
-        loadWeatherByCoords(
+        showNotification("Location access denied. Using Johannesburg instead.", "warning");
+        void loadWeatherByCoords(
           JOHANNESBURG_COORDS.lat,
           JOHANNESBURG_COORDS.lon,
           "Johannesburg"
@@ -318,27 +314,29 @@ export default function App() {
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [permissionState, loadCurrentLocation, loadWeatherByCoords]);
+  }, [permissionState, loadCurrentLocation, loadWeatherByCoords, showNotification]);
 
-  /* ---------- Permission Handlers ---------- */
 
   const handleAllowLocation = async () => {
     setPermissionState("granted");
     setPermissionOpen(false);
+    showNotification("Allowing current-location weather updates.", "info");
+    await requestBrowserNotifications();
     await loadCurrentLocation();
   };
 
-  const handleDenyLocation = () => {
+  const handleDenyLocation = async () => {
     setPermissionState("denied");
     setPermissionOpen(false);
-    loadWeatherByCoords(
+    showNotification("Location access denied. Using Johannesburg instead.", "warning");
+    await loadWeatherByCoords(
       JOHANNESBURG_COORDS.lat,
       JOHANNESBURG_COORDS.lon,
       "Johannesburg"
     );
   };
 
-  /* ---------- Search ---------- */
+
 
   const handleSearchSelect = async (city: {
     name: string;
@@ -379,7 +377,7 @@ export default function App() {
     }
   };
 
-  /* ---------- Saved Locations ---------- */
+
 
   const handleSelectLocation = (location: SavedLocation) => {
     setDrawerOpen(false);
@@ -395,8 +393,6 @@ export default function App() {
       showNotification(`${loc.name} removed.`, "info");
     }
   };
-
-  /* ---------- Render ---------- */
 
   if (loading && !weather) {
     return (
@@ -423,7 +419,6 @@ export default function App() {
           lastUpdated={lastUpdated}
         />
 
-        {/* ---------- Main Content ---------- */}
         <main className="websiteMain">
           <div className="websiteContent">
             {error && !weather ? (
@@ -432,7 +427,7 @@ export default function App() {
               !error && null
             ) : (
               <>
-                {/* ---------- Hero / Current Weather ---------- */}
+
                 <section className="sectionCard currentHero">
                   <div className="heroGrid">
                     <div className="heroPrimary">
@@ -496,7 +491,7 @@ export default function App() {
                   </div>
                 </section>
 
-                {/* ---------- Forecast Section ---------- */}
+                {/*Forecast Section */}
                 <section className="sectionCard">
                   <div className="sectionHeading">
                     <div className="titleWrap">
@@ -521,7 +516,7 @@ export default function App() {
                   )}
                 </section>
 
-                {/* ---------- Air Conditions ---------- */}
+                {/*Air Conditions */}
                 {weather && forecast && (
                   <AirConditions
                     weather={weather}
@@ -535,13 +530,13 @@ export default function App() {
 
         </main>
 
-        {/* ---------- Footer ---------- */}
+        {/*Footer*/}
         <footer className="websiteFooter">
           The WeatherApp · By Mashai Sharon.
         </footer>
       </div>
 
-      {/* ---------- Modals / Drawers ---------- */}
+
       <SearchOverlay
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
@@ -571,10 +566,8 @@ export default function App() {
         }}
       />
 
-      {/* ---------- Toasts ---------- */}
       <ToastStack toasts={toasts} onDismiss={dismissToast} />
 
-      {/* ---------- Hidden permission toggle ---------- */}
       {permissionOpen && (
         <div
           style={{

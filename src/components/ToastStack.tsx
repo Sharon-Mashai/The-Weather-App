@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {Cancel01Icon} from "@hugeicons/core-free-icons";
 
 export type ToastKind = "success" | "error" | "warning" | "info";
 
@@ -57,11 +59,9 @@ export function ToastStack({
             {toast.message}
           </div>
 
-          <button
-            className="toastClose"
-            onClick={() => onDismiss(toast.id)}
-          >
-            ×
+          <button className="toastClose"
+            onClick={() => onDismiss(toast.id)}  >
+            <HugeiconsIcon icon={Cancel01Icon} size={18} />
           </button>
         </div>
       ))}
