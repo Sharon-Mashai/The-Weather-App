@@ -1,5 +1,6 @@
 import {HugeiconsIcon} from "@hugeicons/react";
 import {Menu01Icon,Search01Icon,Settings02Icon,Location01Icon} from "@hugeicons/core-free-icons";
+import { relativeTime } from "../utils/weather";
 
 
 interface HeaderProps {
@@ -9,6 +10,7 @@ interface HeaderProps {
   onSearchClick: () => void;
   onSettingsClick: () => void;
   lastUpdated?: number;
+  isOffline?: boolean;
 }
 
 function Header({
@@ -17,7 +19,8 @@ function Header({
   onMenuClick,
   onSearchClick,
   onSettingsClick,
-
+  lastUpdated,
+  isOffline = false,
 }: HeaderProps) {
   return (
     <header className="topNav">
@@ -68,11 +71,13 @@ function Header({
               {city}
             </strong>
 
-            {country && (
-              <div className="locationCountry">
-                {country}
-              </div>
-            )}
+            <div className="locationCountry">
+              <span>{country ? `${country}` : "Current location"}</span>
+              <span className="locationStatus">
+                {isOffline ? "Offline • cached" : "Live data"}
+              </span>
+              {lastUpdated ? <span>· {relativeTime(lastUpdated)}</span> : null}
+            </div>
 
           </div>
 

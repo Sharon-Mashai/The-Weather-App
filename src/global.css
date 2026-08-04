@@ -256,8 +256,23 @@ body {
 }
 
 .navLocation .locationCountry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   font-size: 11.5px;
   color: var(--text-dim);
+}
+
+.navLocation .locationStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--accent-pill);
+  color: var(--accent-core);
+  font-weight: 600;
 }
 
 
@@ -1560,6 +1575,22 @@ body {
   line-height: 1.55;
 }
 
+.privacyActionBtn {
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--accent-pill);
+  color: var(--accent-core);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.privacyActionBtn:hover {
+  filter: brightness(1.02);
+}
 
 .airConditions {
   margin-top: 0;
@@ -1686,7 +1717,8 @@ body {
   }
 
   .navLocation {
-    display: none;
+    display: inline-flex;
+    max-width: 100%;
   }
 
   .navSpacer {

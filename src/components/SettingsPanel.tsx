@@ -17,6 +17,7 @@ interface SettingsPanelProps {
   unit: TemperatureUnit;
   onThemeChange: (theme: AppTheme) => void;
   onUnitChange: (unit: TemperatureUnit) => void;
+  onClearStoredData: () => void;
 }
 
 export default function SettingsPanel({
@@ -26,6 +27,7 @@ export default function SettingsPanel({
   unit,
   onThemeChange,
   onUnitChange,
+  onClearStoredData,
 }: SettingsPanelProps) {
   if (!open) return null;
 
@@ -146,13 +148,16 @@ export default function SettingsPanel({
         <div className="settingsGroup privacy">
 
           <div className="settingsGroupLabel">
-            Preferences
+            Privacy & security
           </div>
 
           <p className="privacyNote">
-            Your settings are stored locally in your browser.
-            No account is required.
+            Your preferences and saved locations stay in this browser. The app only uses your location when you allow it, and cached weather data is stored locally for offline access.
           </p>
+
+          <button className="privacyActionBtn" onClick={onClearStoredData}>
+            Clear cached weather data
+          </button>
 
         </div>
 

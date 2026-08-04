@@ -15,7 +15,7 @@ import Loading from "./components/Loading";
 import LocationPermission from "./components/LocationPermission";
 import { getCurrentWeather,getForecast,} from "./services/weatherApi";
 import type { WeatherData, ForecastData,} from "./types/weather";
-import type { TemperatureUnit } from "./utils/weather";
+import { getSevereAlert, type TemperatureUnit } from "./utils/weather";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 const DEFAULT_CITY = "Polokwane";
@@ -32,6 +32,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState<number | undefined>(undefined);
   const [hasShownDefaultLocation, setHasShownDefaultLocation] = useState(false);
+  const [isOffline, setIsOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
 
 
   const [forecastTab, setForecastTab] =
@@ -78,6 +79,95 @@ export default function App() {
     []
   );
 
+  const persistWeatherSnapshot = useCallback(
+    (weatherData: WeatherData, forecastData: ForecastData, cityName: string) => {
+      const snapshot = {
+        weather: weatherData,
+        forecast: forecastData,
+        savedAt: Date.now(),
+        city: cityName,
+      };
+
+      localStorage.setItem("lastWeather", JSON.stringify(snapshot));
+    },
+    []
+  );
+
+  const readCachedWeatherSnapshot = useCallback(() => {
+    try {
+      const raw = localStorage.getItem("lastWeather");
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw) as {
+        weather?: WeatherData;
+        forecast?: ForecastData;
+        savedAt?: number;
+        city?: string;
+      };
+
+      if (!parsed.weather || !parsed.forecast) {
+        return null;
+      }
+
+      return {
+        weather: parsed.weather,
+        forecast: parsed.forecast,
+        savedAt: parsed.savedAt ?? Date.now(),
+        city: parsed.city ?? parsed.weather.name,
+      };
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const applyWeatherPayload = useCallback(
+    (weatherData: WeatherData, forecastData: ForecastData, cityName: string) => {
+      setWeather(weatherData);
+      setForecast(forecastData);
+      setActiveCity(cityName || weatherData.name);
+      setLastUpdated(Date.now());
+      setIsOffline(false);
+      persistWeatherSnapshot(weatherData, forecastData, cityName || weatherData.name);
+    },
+    [persistWeatherSnapshot, setActiveCity]
+  );
+
+  const showCachedWeather = useCallback(
+    (cached: ReturnType<typeof readCachedWeatherSnapshot>) => {
+      if (!cached) return;
+
+      setWeather(cached.weather);
+      setForecast(cached.forecast);
+      setActiveCity(cached.city);
+      setLastUpdated(cached.savedAt);
+      setIsOffline(true);
+      setError("");
+      showNotification("Showing cached weather data while you are offline.", "warning");
+    },
+    [setActiveCity, showNotification]
+  );
+
+  const raiseSevereWeatherAlert = useCallback(
+    (weatherData: WeatherData) => {
+      const alertMessage = getSevereAlert(weatherData.weather?.[0]?.main ?? "");
+      if (!alertMessage) return;
+
+      showNotification(alertMessage, "warning");
+
+      if (
+        typeof window !== "undefined" &&
+        "Notification" in window &&
+        Notification.permission === "granted"
+      ) {
+        new Notification(`Weather alert for ${weatherData.name}`, {
+          body: alertMessage,
+          tag: `weather-alert-${weatherData.name}`,
+        });
+      }
+    },
+    [showNotification]
+  );
+
   const activeLocationId = useMemo(() => {
     if (!weather) return null;
     const found = savedLocations.find(
@@ -113,30 +203,24 @@ export default function App() {
           forecastData.city.name = displayName;
         }
 
-        setWeather(weatherData);
-        setForecast(forecastData);
-        setActiveCity(weatherData.name);
-        setLastUpdated(Date.now());
-
-        localStorage.setItem(
-          "lastWeather",
-          JSON.stringify({
-            weather: weatherData,
-            forecast: forecastData,
-            savedAt: Date.now(),
-            city: weatherData.name,
-          })
-        );
+        applyWeatherPayload(weatherData, forecastData, weatherData.name);
+        raiseSevereWeatherAlert(weatherData);
 
         return true;
       } catch {
+        const cached = readCachedWeatherSnapshot();
+        if (cached) {
+          showCachedWeather(cached);
+          return true;
+        }
+
         setError("Unable to load weather.");
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [setActiveCity]
+    [applyWeatherPayload, raiseSevereWeatherAlert, readCachedWeatherSnapshot, showCachedWeather]
   );
 
   const loadWeatherByCity = useCallback(
@@ -150,33 +234,57 @@ export default function App() {
           getForecast(cityName),
         ]);
 
-        setWeather(weatherData);
-        setForecast(forecastData);
-        setActiveCity(weatherData.name);
-        setLastUpdated(Date.now());
-
-        localStorage.setItem(
-          "lastWeather",
-          JSON.stringify({
-            weather: weatherData,
-            forecast: forecastData,
-            savedAt: Date.now(),
-            city: weatherData.name,
-          })
-        );
+        applyWeatherPayload(weatherData, forecastData, weatherData.name);
+        raiseSevereWeatherAlert(weatherData);
 
         return true;
       } catch {
+        const cached = readCachedWeatherSnapshot();
+        if (cached) {
+          showCachedWeather(cached);
+          return true;
+        }
+
         setError("Unable to load weather.");
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [setActiveCity]
+    [applyWeatherPayload, raiseSevereWeatherAlert, readCachedWeatherSnapshot, showCachedWeather]
   );
 
   const initializedRef = useRef(false);
+
+  const clearStoredWeatherData = useCallback(async () => {
+    localStorage.removeItem("lastWeather");
+    setWeather(null);
+    setForecast(null);
+    setError("");
+    setLastUpdated(undefined);
+    setIsOffline(typeof navigator !== "undefined" ? !navigator.onLine : false);
+    await loadWeatherByCity(DEFAULT_CITY);
+    showNotification("Stored weather data cleared from this browser.", "info");
+  }, [loadWeatherByCity, showNotification]);
+
+  const showDefaultWeather = useCallback(async () => {
+    const cached = readCachedWeatherSnapshot();
+    if (cached && !hasShownDefaultLocation) {
+      showCachedWeather(cached);
+    }
+
+    const success = await loadWeatherByCity(DEFAULT_CITY);
+    setHasShownDefaultLocation(true);
+
+    if (!success) {
+      const fallback = readCachedWeatherSnapshot();
+      if (fallback) {
+        showCachedWeather(fallback);
+      }
+    }
+
+    return success;
+  }, [hasShownDefaultLocation, loadWeatherByCity, readCachedWeatherSnapshot, showCachedWeather]);
 
   const requestBrowserNotifications = useCallback(async (): Promise<void> => {
     if (typeof window === "undefined" || !("Notification" in window)) {
@@ -240,14 +348,7 @@ export default function App() {
     initializedRef.current = true;
 
     const timer = window.setTimeout(async () => {
-      if (!hasShownDefaultLocation) {
-        await loadWeatherByCoords(
-          JOHANNESBURG_COORDS.lat,
-          JOHANNESBURG_COORDS.lon,
-          "Johannesburg"
-        );
-        setHasShownDefaultLocation(true);
-      }
+      await showDefaultWeather();
 
       if (permissionState === "granted") {
         showNotification("Using your current location.", "info");
@@ -260,7 +361,7 @@ export default function App() {
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, [permissionState, loadCurrentLocation, loadWeatherByCoords, showNotification, hasShownDefaultLocation]);
+  }, [permissionState, loadCurrentLocation, showDefaultWeather, showNotification]);
 
 
   const handleAllowLocation = async () => {
@@ -283,6 +384,28 @@ export default function App() {
   };
 
 
+
+  useEffect(() => {
+    const handleConnectionChange = () => {
+      const online = navigator.onLine;
+      setIsOffline(!online);
+
+      if (!online) {
+        const cached = readCachedWeatherSnapshot();
+        if (cached) {
+          showCachedWeather(cached);
+        }
+      }
+    };
+
+    window.addEventListener("online", handleConnectionChange);
+    window.addEventListener("offline", handleConnectionChange);
+
+    return () => {
+      window.removeEventListener("online", handleConnectionChange);
+      window.removeEventListener("offline", handleConnectionChange);
+    };
+  }, [readCachedWeatherSnapshot, showCachedWeather]);
 
   const handleSearchSelect = async (city: {
     name: string;
@@ -362,6 +485,7 @@ export default function App() {
           onSearchClick={() => setSearchOpen(true)}
           onSettingsClick={() => setSettingsOpen(true)}
           lastUpdated={lastUpdated}
+          isOffline={isOffline}
         />
 
         <main className="websiteMain">
@@ -495,6 +619,7 @@ export default function App() {
         unit={unit}
         onThemeChange={setTheme}
         onUnitChange={setUnit}
+        onClearStoredData={clearStoredWeatherData}
       />
 
       <LocationsDrawer
