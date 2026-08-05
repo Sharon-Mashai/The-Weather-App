@@ -9,127 +9,157 @@ import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
 import SearchOverlay from "./components/SearchOverlay";
 import SettingsPanel from "./components/SettingsPanel";
-import LocationsDrawer, { type SavedLocation,} from "./components/LocationsDrawer";
-import { ToastStack, type ToastItem, type ToastKind } from "./components/ToastStack";
+import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
+import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
 import Loading from "./components/Loading";
 import LocationPermission from "./components/LocationPermission";
-import { getCurrentWeather,getForecast,} from "./services/weatherApi";
-import type { WeatherData, ForecastData,} from "./types/weather";
+import { getCurrentWeather, getForecast } from "./services/weatherApi";
+import type { WeatherData, ForecastData } from "./types/weather";
 import { getSevereAlert, type TemperatureUnit } from "./utils/weather";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 const DEFAULT_CITY = "Polokwane";
-const JOHANNESBURG_COORDS = { lat: -26.2041, lon: 28.0473 };
+
+const POLOKWANE_COORDS = {
+  lat: -26.2041,
+  lon: 28.0473,
+};
 
 type PermissionState = "prompt" | "granted" | "denied";
 
 export default function App() {
-
+  
 
   const [weather, setWeather] = useState<WeatherData | null>(null);
+
   const [forecast, setForecast] = useState<ForecastData | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
-  const [lastUpdated, setLastUpdated] = useState<number | undefined>(undefined);
-  const [hasShownDefaultLocation, setHasShownDefaultLocation] = useState(false);
-  const [isOffline, setIsOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
+
+  const [lastUpdated, setLastUpdated] = useState<number>();
+
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
 
-  const [forecastTab, setForecastTab] =
-    useState<"hourly" | "weekly">("hourly");
+  /* Forecast*/
+  
+
+  const [forecastTab, setForecastTab] = useState<"hourly" | "weekly">("hourly");
+
+
+  /* Panels*/
+  
 
   const [searchOpen, setSearchOpen] = useState(false);
+
   const [settingsOpen, setSettingsOpen] = useState(false);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [permissionOpen, setPermissionOpen] = useState(false);
 
+  /* User Settings */
 
-  const [unit, setUnit] =
-    useLocalStorage<TemperatureUnit>("unit", "C");
 
-  const [theme, setTheme] =
-    useLocalStorage<"dark" | "light">("theme", "dark");
+  const [unit, setUnit] = useLocalStorage<TemperatureUnit>("unit", "C");
 
-  const [savedLocations, setSavedLocations] =
-    useLocalStorage<SavedLocation[]>("savedLocations", []);
+  const [theme, setTheme] = useLocalStorage<"dark" | "light">("theme", "dark");
 
-  const [activeCity, setActiveCity] =
-    useLocalStorage<string>("activeCity", DEFAULT_CITY);
+  const [savedLocations, setSavedLocations] = useLocalStorage<SavedLocation[]>(
+    "savedLocations",
+    [],
+  );
+
+  const [activeCity, setActiveCity] = useLocalStorage(
+    "activeCity",
+    DEFAULT_CITY,
+  );
 
   const [permissionState, setPermissionState] =
     useLocalStorage<PermissionState>("locationPermission", "prompt");
 
+
+  /* Notifications */
+
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
+  const initializedRef = useRef(false);
+
   const dismissToast = useCallback((id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    setToasts((previousToasts) =>
+      previousToasts.filter((toast) => toast.id !== id),
+    );
   }, []);
 
   const showNotification = useCallback(
-    (
-      message: string,
-      type: ToastKind = "info"
-    ) => {
+    (message: string, kind: ToastKind = "info") => {
       const id = Date.now() + Math.random();
-      setToasts((prev) => [...prev, { id, message, kind: type }]);
+
+      setToasts((previousToasts) => [
+        ...previousToasts,
+        {
+          id,
+          message,
+          kind,
+        },
+      ]);
+
       window.setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
+        setToasts((previousToasts) =>
+          previousToasts.filter((toast) => toast.id !== id),
+        );
       }, 4000);
     },
-    []
+    [],
   );
 
   const persistWeatherSnapshot = useCallback(
-    (weatherData: WeatherData, forecastData: ForecastData, cityName: string) => {
+    (weatherData: WeatherData, forecastData: ForecastData, city: string) => {
       const snapshot = {
         weather: weatherData,
         forecast: forecastData,
+        city,
         savedAt: Date.now(),
-        city: cityName,
       };
 
       localStorage.setItem("lastWeather", JSON.stringify(snapshot));
     },
-    []
+    [],
   );
 
   const readCachedWeatherSnapshot = useCallback(() => {
     try {
-      const raw = localStorage.getItem("lastWeather");
-      if (!raw) return null;
+      const storedWeather = localStorage.getItem("lastWeather");
 
-      const parsed = JSON.parse(raw) as {
-        weather?: WeatherData;
-        forecast?: ForecastData;
-        savedAt?: number;
-        city?: string;
-      };
+      if (!storedWeather) {
+        return null;
+      }
+
+      const parsed = JSON.parse(storedWeather);
 
       if (!parsed.weather || !parsed.forecast) {
         return null;
       }
 
-      return {
-        weather: parsed.weather,
-        forecast: parsed.forecast,
-        savedAt: parsed.savedAt ?? Date.now(),
-        city: parsed.city ?? parsed.weather.name,
-      };
+      return parsed;
     } catch {
       return null;
     }
   }, []);
 
   const applyWeatherPayload = useCallback(
-    (weatherData: WeatherData, forecastData: ForecastData, cityName: string) => {
+    (weatherData: WeatherData, forecastData: ForecastData, city: string) => {
       setWeather(weatherData);
       setForecast(forecastData);
-      setActiveCity(cityName || weatherData.name);
+      setActiveCity(city);
       setLastUpdated(Date.now());
       setIsOffline(false);
-      persistWeatherSnapshot(weatherData, forecastData, cityName || weatherData.name);
+
+      persistWeatherSnapshot(weatherData, forecastData, city);
     },
-    [persistWeatherSnapshot, setActiveCity]
+    [persistWeatherSnapshot, setActiveCity],
   );
 
   const showCachedWeather = useCallback(
@@ -142,53 +172,51 @@ export default function App() {
       setLastUpdated(cached.savedAt);
       setIsOffline(true);
       setError("");
-      showNotification("Showing cached weather data while you are offline.", "warning");
+
+      showNotification(
+        "Showing cached weather because you are offline.",
+        "warning",
+      );
     },
-    [setActiveCity, showNotification]
+    [setActiveCity, showNotification],
   );
 
   const raiseSevereWeatherAlert = useCallback(
     (weatherData: WeatherData) => {
-      const alertMessage = getSevereAlert(weatherData.weather?.[0]?.main ?? "");
-      if (!alertMessage) return;
+      const alert = getSevereAlert(weatherData.weather[0]?.main ?? "");
 
-      showNotification(alertMessage, "warning");
+      if (!alert) return;
 
-      if (
-        typeof window !== "undefined" &&
-        "Notification" in window &&
-        Notification.permission === "granted"
-      ) {
-        new Notification(`Weather alert for ${weatherData.name}`, {
-          body: alertMessage,
-          tag: `weather-alert-${weatherData.name}`,
+      showNotification(alert, "warning");
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(`Weather Alert - ${weatherData.name}`, {
+          body: alert,
         });
       }
     },
-    [showNotification]
+    [showNotification],
   );
 
   const activeLocationId = useMemo(() => {
-    if (!weather) return null;
-    const found = savedLocations.find(
-      (loc) =>
-        loc.name.toLowerCase() === weather.name.toLowerCase()
-    );
-    return found ? found.id : null;
-  }, [savedLocations, weather]);
+    if (!weather) {
+      return null;
+    }
 
+    const location = savedLocations.find(
+      (savedLocation) =>
+        savedLocation.name.toLowerCase() === weather.name.toLowerCase(),
+    );
+
+    return location ? location.id : null;
+  }, [savedLocations, weather]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-
   const loadWeatherByCoords = useCallback(
-    async (
-      lat: number,
-      lon: number,
-      displayName?: string
-    ): Promise<boolean> => {
+    async (lat: number, lon: number, cityName?: string): Promise<boolean> => {
       try {
         setLoading(true);
         setError("");
@@ -198,214 +226,237 @@ export default function App() {
           getForecast(lat, lon),
         ]);
 
-        if (displayName) {
-          weatherData.name = displayName;
-          forecastData.city.name = displayName;
+        if (cityName) {
+          weatherData.name = cityName;
+          forecastData.city.name = cityName;
         }
 
         applyWeatherPayload(weatherData, forecastData, weatherData.name);
+
         raiseSevereWeatherAlert(weatherData);
 
         return true;
       } catch {
         const cached = readCachedWeatherSnapshot();
+
         if (cached) {
           showCachedWeather(cached);
           return true;
         }
 
         setError("Unable to load weather.");
+
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [applyWeatherPayload, raiseSevereWeatherAlert, readCachedWeatherSnapshot, showCachedWeather]
+    [
+      applyWeatherPayload,
+      raiseSevereWeatherAlert,
+      readCachedWeatherSnapshot,
+      showCachedWeather,
+    ],
   );
 
   const loadWeatherByCity = useCallback(
-    async (cityName: string): Promise<boolean> => {
+    async (city: string): Promise<boolean> => {
       try {
         setLoading(true);
         setError("");
 
         const [weatherData, forecastData] = await Promise.all([
-          getCurrentWeather(cityName),
-          getForecast(cityName),
+          getCurrentWeather(city),
+          getForecast(city),
         ]);
 
         applyWeatherPayload(weatherData, forecastData, weatherData.name);
+
         raiseSevereWeatherAlert(weatherData);
 
         return true;
       } catch {
         const cached = readCachedWeatherSnapshot();
+
         if (cached) {
           showCachedWeather(cached);
           return true;
         }
 
         setError("Unable to load weather.");
+
         return false;
       } finally {
         setLoading(false);
       }
     },
-    [applyWeatherPayload, raiseSevereWeatherAlert, readCachedWeatherSnapshot, showCachedWeather]
+    [
+      applyWeatherPayload,
+      raiseSevereWeatherAlert,
+      readCachedWeatherSnapshot,
+      showCachedWeather,
+    ],
   );
 
-  const initializedRef = useRef(false);
+  const showDefaultWeather = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const weatherData = await getCurrentWeather(DEFAULT_CITY);
+
+      const forecastData = await getForecast(DEFAULT_CITY);
+
+      applyWeatherPayload(weatherData, forecastData, weatherData.name);
+    } catch {
+      const cached = readCachedWeatherSnapshot();
+
+      if (cached) {
+        showCachedWeather(cached);
+      } else {
+        setError("Unable to load weather.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [applyWeatherPayload, readCachedWeatherSnapshot, showCachedWeather]);
 
   const clearStoredWeatherData = useCallback(async () => {
     localStorage.removeItem("lastWeather");
+
     setWeather(null);
     setForecast(null);
     setError("");
     setLastUpdated(undefined);
-    setIsOffline(typeof navigator !== "undefined" ? !navigator.onLine : false);
-    await loadWeatherByCity(DEFAULT_CITY);
-    showNotification("Stored weather data cleared from this browser.", "info");
-  }, [loadWeatherByCity, showNotification]);
 
-  const showDefaultWeather = useCallback(async () => {
-    const cached = readCachedWeatherSnapshot();
-    if (cached && !hasShownDefaultLocation) {
-      showCachedWeather(cached);
-    }
+    await showDefaultWeather();
 
-    const success = await loadWeatherByCity(DEFAULT_CITY);
-    setHasShownDefaultLocation(true);
-
-    if (!success) {
-      const fallback = readCachedWeatherSnapshot();
-      if (fallback) {
-        showCachedWeather(fallback);
-      }
-    }
-
-    return success;
-  }, [hasShownDefaultLocation, loadWeatherByCity, readCachedWeatherSnapshot, showCachedWeather]);
-
-  const requestBrowserNotifications = useCallback(async (): Promise<void> => {
+    showNotification("Stored weather cleared.", "success");
+  }, [showDefaultWeather, showNotification]);
+  const requestBrowserNotifications = useCallback(async () => {
     if (typeof window === "undefined" || !("Notification" in window)) {
-      showNotification("Browser notifications are not supported on this device.", "warning");
       return;
     }
 
-    if (Notification.permission === "granted") {
-      showNotification("Browser notifications are enabled.", "success");
-      return;
-    }
-
-    if (Notification.permission === "denied") {
-      showNotification("Browser notifications were blocked. You can enable them in your browser settings.", "warning");
-      return;
-    }
-
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        showNotification("Browser notifications enabled.", "success");
-      } else {
-        showNotification("Browser notifications were not allowed.", "warning");
+    if (Notification.permission === "default") {
+      try {
+        await Notification.requestPermission();
+      } catch {
+        // Ignore
       }
-    } catch {
-      showNotification("Unable to request browser notifications right now.", "warning");
     }
-  }, [showNotification]);
+  }, []);
 
-  const loadCurrentLocation = useCallback(async (): Promise<void> => {
-    setLoading(true);
-    setError("");
-
+  const loadCurrentLocation = useCallback(async () => {
     if (!navigator.geolocation) {
-      await loadWeatherByCity(DEFAULT_CITY);
-      showNotification("Geolocation is unavailable. Showing Polokwane.", "warning");
+      await showDefaultWeather();
       return;
     }
+
+    setLoading(true);
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         await loadWeatherByCoords(
           position.coords.latitude,
-          position.coords.longitude
+          position.coords.longitude,
         );
+
+        setLoading(false);
       },
+
       async () => {
-        showNotification("Using Johannesburg because location access was unavailable.", "warning");
         await loadWeatherByCoords(
-          JOHANNESBURG_COORDS.lat,
-          JOHANNESBURG_COORDS.lon,
-          "Johannesburg"
+          POLOKWANE_COORDS.lat,
+          POLOKWANE_COORDS.lon,
+          "Johannesburg",
         );
+
+        setLoading(false);
       },
-      { timeout: 8000, maximumAge: 60000 }
+
+      {
+        timeout: 8000,
+        maximumAge: 60000,
+      },
     );
-  }, [loadWeatherByCoords, loadWeatherByCity, showNotification]);
+  }, [loadWeatherByCoords, showDefaultWeather]);
 
   useEffect(() => {
-    if (initializedRef.current) return;
+    if (initializedRef.current) {
+      return;
+    }
+
     initializedRef.current = true;
 
-    const timer = window.setTimeout(async () => {
+    async function initialiseApp() {
       await showDefaultWeather();
 
       if (permissionState === "granted") {
-        showNotification("Using your current location.", "info");
-        void loadCurrentLocation();
-      } else if (permissionState === "denied") {
-        showNotification("Location access denied. Using Johannesburg instead.", "warning");
-      } else {
+        await loadCurrentLocation();
+      } else if (permissionState === "prompt") {
         setPermissionOpen(true);
       }
-    }, 0);
+    }
 
-    return () => window.clearTimeout(timer);
-  }, [permissionState, loadCurrentLocation, showDefaultWeather, showNotification]);
-
+    initialiseApp();
+  }, [permissionState, loadCurrentLocation, showDefaultWeather]);
 
   const handleAllowLocation = async () => {
     setPermissionState("granted");
     setPermissionOpen(false);
-    showNotification("Allowing current-location weather updates.", "info");
+
     await requestBrowserNotifications();
     await loadCurrentLocation();
+
+    showNotification("Using your current location.", "success");
   };
 
   const handleDenyLocation = async () => {
     setPermissionState("denied");
     setPermissionOpen(false);
-    showNotification("Location access denied. Using Johannesburg instead.", "warning");
+
     await loadWeatherByCoords(
-      JOHANNESBURG_COORDS.lat,
-      JOHANNESBURG_COORDS.lon,
-      "Johannesburg"
+      POLOKWANE_COORDS.lat,
+      POLOKWANE_COORDS.lon,
+      "Polokwane",
     );
+
+    showNotification("Using Polokwane as your location.", "info");
   };
 
-
-
   useEffect(() => {
-    const handleConnectionChange = () => {
+    function handleConnectionChange() {
       const online = navigator.onLine;
+
       setIsOffline(!online);
 
       if (!online) {
         const cached = readCachedWeatherSnapshot();
+
         if (cached) {
           showCachedWeather(cached);
         }
+      } else if (weather) {
+        loadWeatherByCity(weather.name);
       }
-    };
+    }
 
     window.addEventListener("online", handleConnectionChange);
+
     window.addEventListener("offline", handleConnectionChange);
 
     return () => {
       window.removeEventListener("online", handleConnectionChange);
+
       window.removeEventListener("offline", handleConnectionChange);
     };
-  }, [readCachedWeatherSnapshot, showCachedWeather]);
+  }, [
+    weather,
+    loadWeatherByCity,
+    readCachedWeatherSnapshot,
+    showCachedWeather,
+  ]);
 
   const handleSearchSelect = async (city: {
     name: string;
@@ -413,74 +464,70 @@ export default function App() {
     lat: number;
     lon: number;
   }) => {
-    const success = await loadWeatherByCoords(
-      city.lat,
-      city.lon,
-      city.name
-    );
-
     setSearchOpen(false);
 
-    if (success) {
-      const exists = savedLocations.some(
-        (loc) =>
-          Math.abs(loc.lat - city.lat) < 0.01 &&
-          Math.abs(loc.lon - city.lon) < 0.01
-      );
+    const success = await loadWeatherByCoords(city.lat, city.lon, city.name);
 
-      if (!exists && weather) {
-        const newLocation: SavedLocation = {
-          id: `${city.lat.toFixed(2)}_${city.lon.toFixed(2)}_${Date.now()}`,
-          name: city.name,
-          country: city.country,
-          lat: city.lat,
-          lon: city.lon,
-          icon: weather.weather[0]?.icon,
-          lastTempC: weather.main.temp,
-          updatedAt: Date.now(),
-        };
-        setSavedLocations([...savedLocations, newLocation]);
-      }
+    if (!success) return;
 
-      showNotification(`${city.name} added.`, "success");
+    const alreadySaved = savedLocations.some(
+      (location) => location.name.toLowerCase() === city.name.toLowerCase(),
+    );
+
+    if (!alreadySaved) {
+      const currentWeather = await getCurrentWeather(city.lat, city.lon);
+
+      const newLocation: SavedLocation = {
+        id: crypto.randomUUID(),
+        name: city.name,
+        country: city.country,
+        lat: city.lat,
+        lon: city.lon,
+        icon: currentWeather.weather[0].icon,
+        lastTempC: currentWeather.main.temp,
+        updatedAt: Date.now(),
+      };
+
+      setSavedLocations([...savedLocations, newLocation]);
+
+      showNotification(`${city.name} saved.`, "success");
     }
   };
 
-
-
-  const handleSelectLocation = (location: SavedLocation) => {
+  const handleSelectLocation = async (location: SavedLocation) => {
     setDrawerOpen(false);
-    loadWeatherByCoords(location.lat, location.lon, location.name);
+
+    await loadWeatherByCoords(location.lat, location.lon, location.name);
   };
 
   const handleDeleteLocation = (id: string) => {
-    const loc = savedLocations.find((l) => l.id === id);
-    setSavedLocations(
-      savedLocations.filter((item) => item.id !== id)
-    );
-    if (loc) {
-      showNotification(`${loc.name} removed.`, "info");
+    const location = savedLocations.find((item) => item.id === id);
+
+    setSavedLocations(savedLocations.filter((item) => item.id !== id));
+
+    if (location) {
+      showNotification(`${location.name} removed.`, "info");
     }
   };
 
   if (loading && !weather) {
     return (
       <div className="app">
-        <Loading message="Loading weather data..." />
+        <Loading message="Loading weather..." />
+
         <ToastStack toasts={toasts} onDismiss={dismissToast} />
       </div>
     );
   }
 
-  const hasData = weather && forecast;
+  const hasData = weather !== null && forecast !== null;
 
   return (
     <div className="app">
       <div className="websiteShell">
-      
         <Header
           city={weather ? weather.name : activeCity}
-          country={weather?.sys?.country}
+          country={weather?.sys.country}
           onMenuClick={() => setDrawerOpen(true)}
           onSearchClick={() => setSearchOpen(true)}
           onSettingsClick={() => setSettingsOpen(true)}
@@ -496,59 +543,51 @@ export default function App() {
               !error && null
             ) : (
               <>
-
                 <section className="sectionCard currentHero">
                   <div className="heroGrid">
                     <div className="heroPrimary">
-                      <CurrentWeather
-                        weather={weather!}
-                        unit={unit}
-                      />
-                      <WeatherStats
-                        weather={weather!}
-                        unit={unit}
-                      />
+                      <CurrentWeather weather={weather!} unit={unit} />
+
+                      <WeatherStats weather={weather!} unit={unit} />
                     </div>
+
                     <div className="heroRight">
                       <div className="heroSideCards">
                         <div className="heroSideCard">
-                          <span className="heroSideCardLabel">
-                            Min Temp
-                          </span>
+                          <span className="heroSideCardLabel">Min Temp</span>
+
                           <span className="heroSideCardValue">
-                            {Math.round(weather!.main.temp_min)}°
-                            {unit}
+                            {Math.round(weather!.main.temp_min)}°{unit}
                           </span>
                         </div>
+
                         <div className="heroSideCard">
-                          <span className="heroSideCardLabel">
-                            Max Temp
-                          </span>
+                          <span className="heroSideCardLabel">Max Temp</span>
+
                           <span className="heroSideCardValue">
-                            {Math.round(weather!.main.temp_max)}°
-                            {unit}
+                            {Math.round(weather!.main.temp_max)}°{unit}
                           </span>
                         </div>
+
                         <div className="heroSideCard">
-                          <span className="heroSideCardLabel">
-                            Sunrise
-                          </span>
+                          <span className="heroSideCardLabel">Sunrise</span>
+
                           <span className="heroSideCardValue">
                             {new Date(
-                              weather!.sys.sunrise * 1000
+                              weather!.sys.sunrise * 1000,
                             ).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
                           </span>
                         </div>
+
                         <div className="heroSideCard">
-                          <span className="heroSideCardLabel">
-                            Sunset
-                          </span>
+                          <span className="heroSideCardLabel">Sunset</span>
+
                           <span className="heroSideCardValue">
                             {new Date(
-                              weather!.sys.sunset * 1000
+                              weather!.sys.sunset * 1000,
                             ).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -560,12 +599,12 @@ export default function App() {
                   </div>
                 </section>
 
-           
                 <section className="sectionCard">
                   <div className="sectionHeading">
                     <div className="titleWrap">
                       <h2>Forecast</h2>
                     </div>
+
                     <ForecastTabs
                       active={forecastTab}
                       onChange={setForecastTab}
@@ -573,19 +612,12 @@ export default function App() {
                   </div>
 
                   {forecastTab === "hourly" ? (
-                    <HourlyForecast
-                      forecast={forecast!}
-                      unit={unit}
-                    />
+                    <HourlyForecast forecast={forecast!} unit={unit} />
                   ) : (
-                    <WeeklyForecast
-                      forecast={forecast!}
-                      unit={unit}
-                    />
+                    <WeeklyForecast forecast={forecast!} unit={unit} />
                   )}
                 </section>
 
-          
                 {weather && forecast && (
                   <AirConditions
                     weather={weather}
@@ -596,15 +628,12 @@ export default function App() {
               </>
             )}
           </div>
-
         </main>
 
-        {/*Footer*/}
         <footer className="websiteFooter">
           The WeatherApp · By Mashai Sharon.
         </footer>
       </div>
-
 
       <SearchOverlay
         open={searchOpen}

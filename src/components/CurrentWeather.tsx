@@ -10,6 +10,7 @@ export default function CurrentWeather({
   weather,
   unit,
 }: CurrentWeatherProps) {
+
   const icon = weather.weather[0].icon;
 
   const iconUrl = `https://openweathermap.org/img/wn/${icon}@4x.png`;
@@ -18,7 +19,6 @@ export default function CurrentWeather({
     <section className="currentWeather">
 
       <div className="locationBlock">
-
         <h2 className="locationName">
           {weather.name}
         </h2>
@@ -26,20 +26,16 @@ export default function CurrentWeather({
         <p className="locationCountry">
           {weather.sys.country}
         </p>
-
       </div>
 
       <div className="weatherIcon">
-
         <img
           src={iconUrl}
           alt={weather.weather[0].description}
         />
-
       </div>
 
       <div className="weatherInfo">
-
         <h1>
           {formatTemp(weather.main.temp, unit)}
         </h1>
@@ -47,7 +43,6 @@ export default function CurrentWeather({
         <p className="weatherDescription">
           {weather.weather[0].description}
         </p>
-
       </div>
 
     </section>
