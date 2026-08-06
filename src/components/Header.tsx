@@ -1,5 +1,5 @@
 import {HugeiconsIcon} from "@hugeicons/react";
-import {Menu01Icon,Search01Icon,Settings02Icon,Location01Icon} from "@hugeicons/core-free-icons";
+import {Menu01Icon,Search01Icon,Settings02Icon,Location01Icon,SunCloud02Icon } from "@hugeicons/core-free-icons";
 import { relativeTime } from "../utils/weather";
 
 
@@ -40,7 +40,7 @@ function Header({
         <div className="navBrand">
 
           <div className="brandIcon">
-            🌤
+            <HugeiconsIcon icon={SunCloud02Icon }/>
           </div>
 
           <div className="brandText">

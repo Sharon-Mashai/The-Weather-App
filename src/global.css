@@ -283,13 +283,14 @@ body {
   border-radius: 13px;
   cursor: pointer;
   background: transparent;
-  color: var(--text-body);
+  color: white;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   transition: background 0.2s ease, transform 0.15s ease;
   user-select: none;
 }
+
 
 .iconBtn:hover {
   background: var(--glass-panel-strong);
@@ -308,14 +309,11 @@ body {
   font-size: 18px;
 }
 
-
 .sectionCard {
-  background: var(--glass-panel);
-  border: 1px solid var(--hairline-rule);
   border-radius: 22px;
   padding: 22px 24px;
-  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
-  backdrop-filter: blur(10px);
+  transition: 0.25s ease;
+  backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(10px);
 }
 
