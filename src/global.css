@@ -86,12 +86,6 @@ body,
 }
 
 
-svg {
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 
 h1,h2,h3,h4,h5,h6 {
   font-weight: 600;
@@ -148,6 +142,7 @@ body {
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: 28px;
   align-items: start;
+  justify-content: center;
 }
 
 .websiteContent {
