@@ -1,6 +1,6 @@
 import {HugeiconsIcon} from "@hugeicons/react";
-import {Menu01Icon,Search01Icon,Settings02Icon,Location01Icon,SunCloud02Icon } from "@hugeicons/core-free-icons";
-import { relativeTime } from "../utils/weather";
+import {Menu01Icon,Search01Icon,Settings02Icon,SunCloud02Icon } from "@hugeicons/core-free-icons";
+
 
 
 interface HeaderProps {
@@ -14,13 +14,9 @@ interface HeaderProps {
 }
 
 function Header({
-  city,
-  country,
   onMenuClick,
   onSearchClick,
   onSettingsClick,
-  lastUpdated,
-  isOffline = false,
 }: HeaderProps) {
   return (
     <header className="topNav">
@@ -58,30 +54,7 @@ function Header({
 
         <div className="navSpacer" />
 
-        <div className="navLocation">
-
-          <HugeiconsIcon
-            icon={Location01Icon}
-            size={18}
-          />
-
-          <div>
-
-            <strong>
-              {city}
-            </strong>
-
-            <div className="locationCountry">
-              <span>{country ? `${country}` : "Current location"}</span>
-              <span className="locationStatus">
-                {isOffline ? "Offline • cached" : "Live data"}
-              </span>
-              {lastUpdated ? <span>· {relativeTime(lastUpdated)}</span> : null}
-            </div>
-
-          </div>
-
-        </div>
+        
 
 
         <button className="iconBtn" onClick={onSearchClick} aria-label="Search city" >

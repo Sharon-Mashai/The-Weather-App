@@ -22,7 +22,21 @@
   border-color: #ffc107;
   color: #5c4200;
 }
+[data-theme="light"] .iconBtn {
+  border-color: #404040;
+  color: black;
+}
 
+[data-theme="dark"] .navBrand.brandIcon {
+  background-color: rgba(255, 255, 255, 0.766);
+  border-color: #404040;
+}
+
+[data-theme="light"] .navBrand.brandIcon {
+  background-color: #222222a1;
+  border-color: #404040;
+ 
+}
 
 * {
   margin: 0;
@@ -45,7 +59,7 @@ body,
 
 [data-theme="light"] body {
   font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background-color:#E0F2FF;
+  background-color:white;
   color: #222222;
   overflow-x: hidden;
   min-height: 100vh;
@@ -192,13 +206,11 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent-core), #ffa63d);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-size: 20px;
-  box-shadow: 0 10px 24px -8px rgba(59, 130, 246, 0.45);
+  box-shadow: 0 10px 24px -8px rgba(255, 255, 255, 0.245);
 }
 
 .navBrand .brandIcon svg {
@@ -264,16 +276,6 @@ body {
   color: var(--text-dim);
 }
 
-.navLocation .locationStatus {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: var(--accent-pill);
-  color: var(--accent-core);
-  font-weight: 600;
-}
 
 
 .iconBtn {
@@ -339,8 +341,6 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: var(--accent-pill);
-  color: var(--accent-core);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -360,10 +360,7 @@ body {
 
 
 .currentHero {
-  background:
-    radial-gradient(circle at 88% 0%, var(--sunset-radial-glow), transparent 42%),
-    radial-gradient(circle at 0% 100%, var(--hero-radial-blue), transparent 50%),
-    linear-gradient(135deg, var(--card-gradient-top), var(--card-gradient-mid));
+  background:#515789;
   border: 1px solid var(--hairline-rule);
   box-shadow: var(--shadow-glow-soft);
   position: relative;
@@ -404,7 +401,6 @@ body {
 }
 
 .heroSideCard {
-  background: var(--glass-panel);
   border: 1px solid var(--hairline-rule);
   border-radius: 16px;
   padding: 14px 16px;
@@ -645,7 +641,7 @@ body {
 .hourCard {
   min-width: 88px;
   padding: 16px 10px;
-  background: var(--glass-panel);
+  background:#515789;
   border-radius: 18px;
   text-align: center;
   transition: 0.2s ease;
