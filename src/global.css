@@ -1,6 +1,49 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Light-Theme*/
+[data-theme="light"] body {
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: white;
+  color: #222222;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: block;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Dark-Theme*/
+
+[data-theme="dark"] body {
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background-color: rgb(39, 37, 37);
+  color: #ffffff;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: block;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 [data-theme="dark"] .segBtn {
   background-color: #252525;
   border-color: #404040;
@@ -22,6 +65,7 @@
   border-color: #ffc107;
   color: #5c4200;
 }
+
 [data-theme="light"] .iconBtn {
   border-color: #404040;
   color: black;
@@ -35,69 +79,13 @@
 [data-theme="light"] .navBrand.brandIcon {
   background-color: #222222a1;
   border-color: #404040;
- 
 }
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  min-height: 100%;
-}
-
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/*Light Theme*/
-
-[data-theme="light"] body {
-  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background-color:white;
-  color: #222222;
-  overflow-x: hidden;
-  min-height: 100vh;
-  display: block;
-  padding: 0;
-  transition: background-color 0.3s ease, color 0.25s ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Dark Theme*/
-
-[data-theme="dark"] body {
-  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background-color: #383640;
-  color: #ffffff;
-  overflow-x: hidden;
-  min-height: 100vh;
-  display: block;
-  padding: 0;
-  transition: background-color 0.3s ease, color 0.25s ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-
-
 h1,h2,h3,h4,h5,h6 {
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-
-html,
-body,
-:root,
-:root[data-theme="dark"],
-:root[data-theme="light"] {
+html,body,:root,:root[data-theme="dark"],:root[data-theme="light"] {
   min-height: 100%;
 }
 
@@ -112,8 +100,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-
 .app {
   min-height: 100vh;
   display: flex;
@@ -174,7 +160,11 @@ body {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0)
+  );
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--hairline-rule);
@@ -271,8 +261,6 @@ body {
   color: var(--text-dim);
 }
 
-
-
 .iconBtn {
   width: 42px;
   height: 42px;
@@ -287,7 +275,6 @@ body {
   transition: background 0.2s ease, transform 0.15s ease;
   user-select: none;
 }
-
 
 .iconBtn:hover {
   background: var(--glass-panel-strong);
@@ -305,6 +292,7 @@ body {
   border-radius: 10px;
   font-size: 18px;
 }
+
 
 .sectionCard {
   border-radius: 22px;
@@ -353,9 +341,8 @@ body {
   color: var(--text-body);
 }
 
-
 .currentHero {
-  background:#515789;
+  background: rgba(255, 255, 255, 0.326);
   border: 1px solid var(--hairline-rule);
   box-shadow: var(--shadow-glow-soft);
   position: relative;
@@ -515,6 +502,7 @@ body {
   text-transform: capitalize;
 }
 
+
 .weatherStats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -571,6 +559,7 @@ body {
   line-height: 1.1;
 }
 
+
 .forecastTabs {
   display: inline-flex;
   background: var(--glass-panel);
@@ -616,6 +605,7 @@ body {
   background: var(--accent-pill);
 }
 
+
 .hourlyForecast {
   margin-top: 4px;
   padding: 0;
@@ -636,7 +626,7 @@ body {
 .hourCard {
   min-width: 88px;
   padding: 16px 10px;
-  background:#515789;
+  background: #515789;
   border-radius: 18px;
   text-align: center;
   transition: 0.2s ease;
@@ -690,7 +680,11 @@ body {
 }
 
 .nowCard {
-  background: linear-gradient(180deg, var(--accent-gradient-card-1), var(--accent-gradient-card-2));
+  background: linear-gradient(
+    180deg,
+    var(--accent-gradient-card-1),
+    var(--accent-gradient-card-2)
+  );
   border: 1px solid var(--accent-card-edge);
 }
 
@@ -698,6 +692,7 @@ body {
   color: var(--accent-core);
   font-weight: 600;
 }
+
 
 .weeklyForecast {
   margin-top: 4px;
@@ -776,7 +771,6 @@ body {
   justify-self: end;
 }
 
-
 .forecastItemExtended {
   grid-template-columns: 88px 64px 1fr;
   gap: 12px;
@@ -852,6 +846,7 @@ body {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
 }
 
+
 .loadingState {
   display: flex;
   flex-direction: column;
@@ -895,6 +890,8 @@ body {
 }
 
 
+/*Modal*/
+
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -913,13 +910,18 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
 .modalContent {
-  background: linear-gradient(180deg, var(--modal-surface-top) 0%, var(--modal-surface-bottom) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--modal-surface-top) 0%,
+    var(--modal-surface-bottom) 100%
+  );
   color: var(--text-body);
   border-radius: 26px;
   padding: 30px 24px 24px;
@@ -936,6 +938,7 @@ body {
     transform: translateY(22px) scale(0.98);
     opacity: 0;
   }
+
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
@@ -1019,6 +1022,8 @@ body {
 }
 
 
+/* Notification Toast*/
+
 .toastStack {
   position: fixed;
   top: 20px;
@@ -1046,7 +1051,11 @@ body {
   animation: toastIn 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
   pointer-events: auto;
   border: 1px solid var(--hairline-rule);
-  background: linear-gradient(180deg, var(--modal-surface-top), var(--modal-surface-bottom));
+  background: linear-gradient(
+    180deg,
+    var(--modal-surface-top),
+    var(--modal-surface-bottom)
+  );
 }
 
 .toastCard.toast-success {
@@ -1070,6 +1079,7 @@ body {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1131,6 +1141,9 @@ body {
   color: var(--text-body);
 }
 
+
+/*Location Drawer*/
+
 .drawerBackdrop {
   position: fixed;
   inset: 0;
@@ -1155,7 +1168,11 @@ body {
   width: min(340px, 88vw);
   max-width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, var(--modal-surface-top) 0%, var(--modal-surface-bottom) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--modal-surface-top) 0%,
+    var(--modal-surface-bottom) 100%
+  );
   color: var(--text-body);
   z-index: 90;
   transform: translateX(-100%);
@@ -1330,6 +1347,7 @@ body {
   color: var(--status-error-fg);
 }
 
+
 .searchPanel {
   max-width: 460px;
   padding: 18px 16px 14px;
@@ -1379,6 +1397,33 @@ body {
   color: var(--text-faint);
 }
 
+
+/* Light search panel styling */
+
+[data-theme="light"] {
+  --search-field-bg: #212121;
+}
+
+[data-theme="light"] .searchInputWrap {
+  background-color: #212121;
+  border-color: #404040;
+  color: #dcdcdc;
+}
+
+[data-theme="light"] .searchInputWrap input {
+  color: #ffffff;
+}
+
+[data-theme="light"] .searchInputWrap input::placeholder {
+  color: #aaaaaa;
+}
+
+[data-theme="light"] .searchInputWrap svg {
+  color: #dcdcdc;
+  stroke: #dcdcdc;
+}
+
+
 .textBtn {
   border: none;
   background: transparent;
@@ -1401,6 +1446,9 @@ body {
 .textBtn:hover {
   background: var(--accent-pill);
 }
+
+
+/* Search Suggestion */
 
 .suggestionsList {
   list-style: none;
@@ -1473,6 +1521,9 @@ body {
   font-weight: 500;
 }
 
+
+/* Settings*/
+
 .settingsPanel {
   max-width: 420px;
   padding: 20px 20px 16px;
@@ -1516,6 +1567,8 @@ body {
   color: var(--accent-core);
 }
 
+
+
 .segmentedControl {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1558,6 +1611,7 @@ body {
   font-weight: 600;
 }
 
+
 .settingsGroup.privacy .privacyNote {
   color: var(--text-dim);
   font-size: 13px;
@@ -1580,6 +1634,8 @@ body {
 .privacyActionBtn:hover {
   filter: brightness(1.02);
 }
+
+/*Air Conditions*/
 
 .airConditions {
   margin-top: 0;
@@ -1656,9 +1712,12 @@ body {
   width: 1px;
   background: var(--hairline-rule);
 }
+
+
 /*Responsiveness*/
 
 /* 1200px and up */
+
 @media (min-width: 1200px) {
   .websiteMain {
     padding: 32px 40px 80px;
@@ -1669,7 +1728,9 @@ body {
   }
 }
 
+
 /* 1100px */
+
 @media (max-width: 1100px) {
   .websiteMain {
     grid-template-columns: 1fr;
@@ -1694,7 +1755,9 @@ body {
   }
 }
 
+
 /* 768px */
+
 @media (max-width: 768px) {
   .websiteMain {
     padding: 20px 18px 60px;
@@ -1747,7 +1810,9 @@ body {
   }
 }
 
+
 /* 560px */
+
 @media (max-width: 560px) {
   .weatherStats {
     grid-template-columns: repeat(2, 1fr);
@@ -1778,7 +1843,9 @@ body {
   }
 }
 
+
 /* 480px */
+
 @media (max-width: 480px) {
   body {
     padding: 0;
@@ -1848,7 +1915,9 @@ body {
   }
 }
 
+
 /* 380px */
+
 @media (max-width: 380px) {
   .statValue {
     font-size: 14px;
@@ -1874,7 +1943,9 @@ body {
   }
 }
 
+
 /* 320px */
+
 @media (max-width: 320px) {
   .websiteMain {
     padding: 14px 12px 48px;
@@ -1926,50 +1997,5 @@ body {
 
   .locationName {
     font-size: 20px;
-  }
-}
-
-
-button,
-[role="button"],
-.clickable {
-  cursor: pointer;
-}
-
-*:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-button:focus-visible,
-input:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--accent-core);
-  outline-offset: 2px;
-}
-
-::selection {
-  background: var(--accent-pill);
-  color: var(--accent-core);
-}
-
-/* Custom scrollbar (desktop) */
-@media (pointer: fine) and (min-width: 769px) {
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--glass-panel-strong);
-    border-radius: 999px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--glass-panel-hover);
   }
 }
