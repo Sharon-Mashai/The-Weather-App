@@ -100,14 +100,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .app {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  gap: 0;
+  align-items: center;
   background: var(--page-background-grad);
 }
 
@@ -116,6 +115,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  align-items: center;
 }
 
 .websiteMain {
@@ -124,14 +124,15 @@ body {
   max-width: 1320px;
   margin: 0 auto;
   padding: 28px 32px 72px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 28px;
-  align-items: start;
-  justify-content: center;
 }
 
 .websiteContent {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -139,14 +140,18 @@ body {
 }
 
 .websiteSidebar {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   gap: 22px;
-  position: sticky;
-  top: 96px;
+  position: static;
 }
 
 .websiteFooter {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
   border-top: 1px solid var(--hairline-rule);
   padding: 20px 32px 26px;
   text-align: center;
@@ -160,18 +165,25 @@ body {
   position: sticky;
   top: 0;
   z-index: 40;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0),
     rgba(255, 255, 255, 0)
   );
+
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
+
   border-bottom: 1px solid var(--hairline-rule);
 }
 
 .topNavInner {
-  max-width: 1320px;
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 12px 32px;
   display: flex;
@@ -309,7 +321,7 @@ body {
 .sectionHeading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 16px;
   gap: 12px;
 }
@@ -422,14 +434,14 @@ body {
   margin-top: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: center;
+  text-align: center;
   padding: 0;
   gap: 6px;
 }
 
 .currentWeather .locationBlock {
-  text-align: left;
+  text-align: center;
   margin: 0;
 }
 
@@ -471,6 +483,7 @@ body {
 .weatherInfo {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 
@@ -511,15 +524,33 @@ body {
   padding: 0;
 }
 
+.weatherStats {
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 10px;
+  justify-content: center;
+  align-items: stretch;
+}
+
 .statCard {
+  width: 100%;
+  min-width: 0;
   background: var(--glass-panel);
   border: 1px solid var(--hairline-rule);
   border-radius: 16px;
-  padding: 14px 10px;
+  padding: 14px 12px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
+  text-align: center;
   gap: 6px;
+
   transition: background 0.2s ease, transform 0.15s ease;
   cursor: default;
 }
@@ -530,7 +561,10 @@ body {
 }
 
 .statIconWrap {
-  display: inline-flex;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   opacity: 0.9;
 }
 
@@ -540,23 +574,30 @@ body {
 }
 
 .statLabel {
+  width: 100%;
   color: var(--text-dim);
   font-size: 11.5px;
   font-weight: 500;
   letter-spacing: 0.2px;
   text-transform: uppercase;
   margin: 0;
+
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 6px;
 }
 
 .statValue {
+  width: 100%;
   color: var(--text-body);
   font-size: 17px;
   font-weight: 600;
   margin: 0;
   line-height: 1.1;
+
+  text-align: center;
 }
 
 
@@ -613,6 +654,7 @@ body {
 
 .hourlyCards {
   display: flex;
+  justify-content: center;
   gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -1646,6 +1688,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  justify-items: center;
 }
 
 .airCard {
@@ -1654,9 +1697,12 @@ body {
   padding: 16px 18px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 8px;
   border: 1px solid var(--hairline-rule);
   transition: background 0.2s ease, transform 0.15s ease;
+  width: 100%;
 }
 
 .airCard:hover {
@@ -1693,11 +1739,14 @@ body {
   grid-template-columns: 1fr 1px 1fr;
   gap: 16px;
   align-items: center;
+  width: 100%;
 }
 
 .sunCell {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 8px;
   padding: 2px 4px;
 }
@@ -1730,14 +1779,15 @@ body {
 
 
 /* 1100px */
-
 @media (max-width: 1100px) {
   .websiteMain {
-    grid-template-columns: 1fr;
+    width: 100%;
+    padding: 28px 24px 72px;
   }
 
+  .websiteContent,
   .websiteSidebar {
-    position: static;
+    max-width: 900px;
   }
 
   .heroGrid {
@@ -1757,14 +1807,21 @@ body {
 
 
 /* 768px */
-
 @media (max-width: 768px) {
   .websiteMain {
+    width: 100%;
     padding: 20px 18px 60px;
     gap: 20px;
   }
 
+  .websiteContent,
+  .websiteSidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .topNavInner {
+    width: 100%;
     padding: 10px 18px;
   }
 
@@ -1805,7 +1862,7 @@ body {
   }
 
   .sectionCard {
-    padding: 18px 18px;
+    padding: 18px;
     border-radius: 18px;
   }
 }
