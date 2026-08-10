@@ -2,15 +2,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./global.css";
 import Header from "./components/Header";
 import CurrentWeather from "./components/CurrentWeather";
-import WeatherStats from "./components/WeatherStats";
 import ForecastTabs from "./components/ForecastTabs";
 import HourlyForecast from "./components/HourlyForecast";
 import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
 import SearchOverlay from "./components/SearchOverlay";
 import SettingsPanel from "./components/SettingsPanel";
-import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
-import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
+import LocationsDrawer, {
+  type SavedLocation,
+} from "./components/LocationsDrawer";
+import { ToastStack, type ToastItem, type ToastKind } from "./components/ToastStack";
 import Loading from "./components/Loading";
 import LocationPermission from "./components/LocationPermission";
 import { getCurrentWeather, getForecast } from "./services/weatherApi";
@@ -28,44 +29,29 @@ const POLOKWANE_COORDS = {
 type PermissionState = "prompt" | "granted" | "denied";
 
 export default function App() {
-  
-
   const [weather, setWeather] = useState<WeatherData | null>(null);
-
   const [forecast, setForecast] = useState<ForecastData | null>(null);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
-
   const [lastUpdated, setLastUpdated] = useState<number>();
-
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-
-  /* Forecast*/
-  
-
+  /* Forecast */
   const [forecastTab, setForecastTab] = useState<"hourly" | "weekly">("hourly");
 
-
-  /* Panels*/
-  
-
+  /* Panels */
   const [searchOpen, setSearchOpen] = useState(false);
-
   const [settingsOpen, setSettingsOpen] = useState(false);
-
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const [permissionOpen, setPermissionOpen] = useState(false);
 
   /* User Settings */
-
-
   const [unit, setUnit] = useLocalStorage<TemperatureUnit>("unit", "C");
 
-  const [theme, setTheme] = useLocalStorage<"dark" | "light">("theme", "dark");
+  const [theme, setTheme] = useLocalStorage<"dark" | "light">(
+    "theme",
+    "dark",
+  );
 
   const [savedLocations, setSavedLocations] = useLocalStorage<SavedLocation[]>(
     "savedLocations",
@@ -80,9 +66,7 @@ export default function App() {
   const [permissionState, setPermissionState] =
     useLocalStorage<PermissionState>("locationPermission", "prompt");
 
-
   /* Notifications */
-
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   const initializedRef = useRef(false);
@@ -304,7 +288,6 @@ export default function App() {
 
     try {
       const weatherData = await getCurrentWeather(DEFAULT_CITY);
-
       const forecastData = await getForecast(DEFAULT_CITY);
 
       applyWeatherPayload(weatherData, forecastData, weatherData.name);
@@ -333,6 +316,7 @@ export default function App() {
 
     showNotification("Stored weather cleared.", "success");
   }, [showDefaultWeather, showNotification]);
+
   const requestBrowserNotifications = useCallback(async () => {
     if (typeof window === "undefined" || !("Notification" in window)) {
       return;
@@ -369,7 +353,7 @@ export default function App() {
         await loadWeatherByCoords(
           POLOKWANE_COORDS.lat,
           POLOKWANE_COORDS.lon,
-          "Johannesburg",
+          "Polokwane",
         );
 
         setLoading(false);
@@ -443,12 +427,10 @@ export default function App() {
     }
 
     window.addEventListener("online", handleConnectionChange);
-
     window.addEventListener("offline", handleConnectionChange);
 
     return () => {
       window.removeEventListener("online", handleConnectionChange);
-
       window.removeEventListener("offline", handleConnectionChange);
     };
   }, [
@@ -514,7 +496,6 @@ export default function App() {
     return (
       <div className="app">
         <Loading message="Loading weather..." />
-
         <ToastStack toasts={toasts} onDismiss={dismissToast} />
       </div>
     );
@@ -546,54 +527,24 @@ export default function App() {
                 <section className="sectionCard currentHero">
                   <div className="heroGrid">
                     <div className="heroPrimary">
-                      <CurrentWeather weather={weather!} unit={unit} />
+                      <CurrentWeather
+                        weather={weather}
+                        unit={unit}
+                      />
 
-                      <WeatherStats weather={weather!} unit={unit} />
-                    </div>
+                      <div className="currentWeatherSummary">
+                        <span>
+                          Min {Math.round(weather.main.temp_min)}°{unit}
+                        </span>
 
-                    <div className="heroRight">
-                      <div className="heroSideCards">
-                        <div className="heroSideCard">
-                          <span className="heroSideCardLabel">Min Temp</span>
+                        <span>
+                          Max {Math.round(weather.main.temp_max)}°{unit}
+                        </span>
 
-                          <span className="heroSideCardValue">
-                            {Math.round(weather!.main.temp_min)}°{unit}
-                          </span>
-                        </div>
-
-                        <div className="heroSideCard">
-                          <span className="heroSideCardLabel">Max Temp</span>
-
-                          <span className="heroSideCardValue">
-                            {Math.round(weather!.main.temp_max)}°{unit}
-                          </span>
-                        </div>
-
-                        <div className="heroSideCard">
-                          <span className="heroSideCardLabel">Sunrise</span>
-
-                          <span className="heroSideCardValue">
-                            {new Date(
-                              weather!.sys.sunrise * 1000,
-                            ).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
-                        </div>
-
-                        <div className="heroSideCard">
-                          <span className="heroSideCardLabel">Sunset</span>
-
-                          <span className="heroSideCardValue">
-                            {new Date(
-                              weather!.sys.sunset * 1000,
-                            ).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
-                        </div>
+                        <span>
+                          Feels like{" "}
+                          {Math.round(weather.main.feels_like)}°{unit}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -612,9 +563,9 @@ export default function App() {
                   </div>
 
                   {forecastTab === "hourly" ? (
-                    <HourlyForecast forecast={forecast!} unit={unit} />
+                    <HourlyForecast forecast={forecast} unit={unit} />
                   ) : (
-                    <WeeklyForecast forecast={forecast!} unit={unit} />
+                    <WeeklyForecast forecast={forecast} unit={unit} />
                   )}
                 </section>
 
@@ -665,7 +616,10 @@ export default function App() {
         }}
       />
 
-      <ToastStack toasts={toasts} onDismiss={dismissToast} />
+      <ToastStack
+        toasts={toasts}
+        onDismiss={dismissToast}
+      />
 
       {permissionOpen && (
         <div

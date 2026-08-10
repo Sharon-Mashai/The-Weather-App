@@ -272,8 +272,6 @@ align-items: center;
 gap: 10px;
 padding: 8px 14px;
 border-radius: 14px;
-
-/* Real translucent glass */
 background: rgba(255, 255, 255, 0.14);
 border: 1px solid rgba(255, 255, 255, 0.24);
 backdrop-filter: blur(18px) saturate(140%);
@@ -427,9 +425,8 @@ padding: 30px 32px;
 
 .heroGrid {
 display: grid;
-grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
 gap: 28px;
-align-items: center;
+
 }
 
 .heroPrimary {
@@ -590,6 +587,32 @@ font-weight: 500;
 margin-top: 4px;
 text-transform: capitalize;
 }
+.currentWeatherSummary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 10px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.currentWeatherSummary span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.currentWeatherSummary span + span::before {
+  content: "•";
+  margin-right: 24px;
+  color: var(--text-faint);
+}
+
 
 /* =========================================================
 WEATHER STATS
@@ -2148,6 +2171,19 @@ font-size: 19px;
 padding: 24px 18px 20px;
 border-radius: 22px;
 }
+}
+
+/* 560px */
+@media (max-width: 560px) {
+  .currentWeatherSummary {
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+
+  .currentWeatherSummary span + span::before {
+    margin-right: 12px;
+  }
 }
 
 /* 380px */
