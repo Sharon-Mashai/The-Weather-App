@@ -7,8 +7,6 @@ import ForecastTabs from "./components/ForecastTabs";
 import HourlyForecast from "./components/HourlyForecast";
 import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
-import SearchOverlay from "./components/SearchOverlay";
-import SettingsPanel from "./components/SettingsPanel";
 import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
 import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
 import Loading from "./components/Loading";
@@ -41,8 +39,6 @@ export default function App() {
   );
 
   /* Panels */
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [permissionOpen, setPermissionOpen] = useState(false);
 
@@ -312,19 +308,6 @@ export default function App() {
     }
   }, [applyWeatherPayload, readCachedWeatherSnapshot, showCachedWeather]);
 
-  const clearStoredWeatherData = useCallback(async () => {
-    localStorage.removeItem("lastWeather");
-
-    setWeather(null);
-    setForecast(null);
-    setError("");
-    setLastUpdated(undefined);
-
-    await showDefaultWeather();
-
-    showNotification("Stored weather cleared.", "success");
-  }, [showDefaultWeather, showNotification]);
-
   const requestBrowserNotifications = useCallback(async () => {
     if (typeof window === "undefined" || !("Notification" in window)) {
       return;
@@ -342,6 +325,7 @@ export default function App() {
   const loadCurrentLocation = useCallback(async () => {
     if (!navigator.geolocation) {
       await showDefaultWeather();
+      showNotification("Geolocation is not supported. Using Polokwane.", "info");
       return;
     }
 
@@ -355,6 +339,7 @@ export default function App() {
         );
 
         setLoading(false);
+        showNotification("Using your current location.", "success");
       },
 
       async () => {
@@ -365,6 +350,7 @@ export default function App() {
         );
 
         setLoading(false);
+        showNotification("Using Polokwane as your location.", "info");
       },
 
       {
@@ -372,7 +358,7 @@ export default function App() {
         maximumAge: 60000,
       },
     );
-  }, [loadWeatherByCoords, showDefaultWeather]);
+  }, [loadWeatherByCoords, showDefaultWeather, showNotification]);
 
   useEffect(() => {
     if (initializedRef.current) {
@@ -382,17 +368,26 @@ export default function App() {
     initializedRef.current = true;
 
     async function initialiseApp() {
-      await showDefaultWeather();
-
       if (permissionState === "granted") {
         await loadCurrentLocation();
-      } else if (permissionState === "prompt") {
+        return;
+      }
+
+      const loaded = await loadWeatherByCity(activeCity);
+
+      if (!loaded) {
+        await showDefaultWeather();
+      }
+
+      if (permissionState === "prompt") {
         setPermissionOpen(true);
       }
     }
 
-    initialiseApp();
-  }, [permissionState, loadCurrentLocation, showDefaultWeather]);
+    window.setTimeout(() => {
+      initialiseApp();
+    }, 0);
+  }, [permissionState, loadCurrentLocation, showDefaultWeather, loadWeatherByCity, activeCity]);
 
   const handleAllowLocation = async () => {
     setPermissionState("granted");
@@ -400,21 +395,21 @@ export default function App() {
 
     await requestBrowserNotifications();
     await loadCurrentLocation();
-
-    showNotification("Using your current location.", "success");
   };
 
   const handleDenyLocation = async () => {
     setPermissionState("denied");
     setPermissionOpen(false);
 
-    await loadWeatherByCoords(
+    const success = await loadWeatherByCoords(
       POLOKWANE_COORDS.lat,
       POLOKWANE_COORDS.lon,
       "Polokwane",
     );
 
-    showNotification("Using Polokwane as your location.", "info");
+    if (success) {
+      showNotification("Using Polokwane as your location.", "info");
+    }
   };
 
   useEffect(() => {
@@ -448,15 +443,12 @@ export default function App() {
     showCachedWeather,
   ]);
 
-  
   const handleSearchSelect = async (city: {
     name: string;
     country: string;
     lat: number;
     lon: number;
   }) => {
-    setSearchOpen(false);
-
     const success = await loadWeatherByCoords(
       city.lat,
       city.lon,
@@ -473,14 +465,12 @@ export default function App() {
         location.name.toLowerCase() === city.name.toLowerCase(),
     );
 
-    /* */
     if (alreadySaved) {
       setSearchedLocation(null);
       return;
     }
 
     try {
-      /**/
       const currentWeather = await getCurrentWeather(
         city.lat,
         city.lon,
@@ -499,11 +489,9 @@ export default function App() {
 
       setSearchedLocation(newLocation);
     } catch {
-  
       setSearchedLocation(null);
     }
   };
-
 
   const handleSaveLocation = () => {
     if (!searchedLocation) {
@@ -584,8 +572,13 @@ export default function App() {
           city={weather ? weather.name : activeCity}
           country={weather?.sys.country}
           onMenuClick={() => setDrawerOpen(true)}
-          onSearchClick={() => setSearchOpen(true)}
-          onSettingsClick={() => setSettingsOpen(true)}
+          onSaveLocationClick={handleSaveLocation}
+          canSaveLocation={searchedLocation !== null}
+          theme={theme}
+          onThemeToggle={() => setTheme(theme === "dark" ? "light" : "dark")}
+          unit={unit}
+          onUnitChange={setUnit}
+          onSelectCity={handleSearchSelect}
           lastUpdated={lastUpdated}
           isOffline={isOffline}
         />
@@ -604,8 +597,6 @@ export default function App() {
                       <CurrentWeather
                         weather={weather}
                         unit={unit}
-                        canSaveLocation={searchedLocation !== null}
-                        onSaveLocation={handleSaveLocation}
                       />
 
                       <div className="currentWeatherSummary">
@@ -666,22 +657,6 @@ export default function App() {
         </main>
       </div>
 
-      <SearchOverlay
-        open={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        onSelectCity={handleSearchSelect}
-      />
-
-      <SettingsPanel
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        theme={theme}
-        unit={unit}
-        onThemeChange={setTheme}
-        onUnitChange={setUnit}
-        onClearStoredData={clearStoredWeatherData}
-      />
-
       <LocationsDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -690,10 +665,6 @@ export default function App() {
         unit={unit}
         onSelect={handleSelectLocation}
         onRemove={handleDeleteLocation}
-        onSearchOpen={() => {
-          setDrawerOpen(false);
-          setSearchOpen(true);
-        }}
       />
 
       <ToastStack

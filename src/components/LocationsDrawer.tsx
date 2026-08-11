@@ -1,7 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Location01Icon,
-  Search01Icon,
   Delete02Icon,
 } from "@hugeicons/core-free-icons";
 
@@ -28,7 +27,6 @@ interface LocationsDrawerProps {
   unit: TemperatureUnit;
   onSelect: (location: SavedLocation) => void;
   onRemove: (id: string) => void;
-  onSearchOpen: () => void;
 }
 
 export default function LocationsDrawer({
@@ -39,7 +37,6 @@ export default function LocationsDrawer({
   unit,
   onSelect,
   onRemove,
-  onSearchOpen,
 }: LocationsDrawerProps) {
   return (
     <>
@@ -63,23 +60,10 @@ export default function LocationsDrawer({
 
         </div>
 
-        <button
-          className="searchRowBtn"
-          onClick={onSearchOpen}
-        >
-          <HugeiconsIcon
-            icon={Search01Icon}
-            size={18}
-          />
-
-          Search city
-
-        </button>
-
         {locations.length === 0 && (
 
           <p className="emptyHint">
-            Search for a city to save it here.
+            Search for a city using the search icon in the header above to save it here.
           </p>
 
         )}

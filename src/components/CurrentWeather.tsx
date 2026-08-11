@@ -5,15 +5,11 @@ import { formatTemp, type TemperatureUnit } from "../utils/weather";
 interface CurrentWeatherProps {
   weather: WeatherData;
   unit: TemperatureUnit;
-  canSaveLocation?: boolean;
-  onSaveLocation?: () => void;
 }
 
 export default function CurrentWeather({
   weather,
   unit,
-  canSaveLocation = false,
-  onSaveLocation,
 }: CurrentWeatherProps) {
   const icon = weather.weather[0].icon;
 
@@ -43,16 +39,6 @@ export default function CurrentWeather({
           {weather.weather[0].description}
         </p>
       </div>
-
-      {canSaveLocation && onSaveLocation && (
-        <button
-          type="button"
-          className="saveLocationButton"
-          onClick={onSaveLocation}
-        >
-          Save Location
-        </button>
-      )}
     </section>
   );
 }

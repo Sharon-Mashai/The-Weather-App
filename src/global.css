@@ -317,6 +317,258 @@ body {
   font-size: 18px;
 }
 
+/* ---------- Header Search ---------- */
+
+.headerSearchWrap {
+  position: relative;
+  z-index: 50;
+}
+
+.headerSearchInputWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: border-color 0.2s ease;
+  min-width: 220px;
+  max-width: 340px;
+}
+
+.headerSearchInputWrap:focus-within {
+  border-color: var(--accent-core);
+}
+
+.headerSearchInputWrap svg {
+  stroke: currentColor;
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.headerSearchInputWrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-body);
+  font-family: inherit;
+  font-size: 14.5px;
+  min-width: 0;
+}
+
+.headerSearchInputWrap input::placeholder {
+  color: var(--text-faint);
+}
+
+.headerSearchClear,
+.headerSearchClose {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  padding: 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  flex-shrink: 0;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.headerSearchClear:hover,
+.headerSearchClose:hover {
+  color: var(--text-body);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.headerSearchDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 280px;
+  max-width: 420px;
+  width: max-content;
+  background: var(--glass-panel);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.headerSearchDropdown .suggestHint {
+  padding: 10px 12px;
+  color: var(--text-dim);
+  font-size: 13.5px;
+}
+
+.headerSearchDropdown .suggestionsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.headerSearchDropdown .suggestBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.headerSearchDropdown .suggestBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.headerSearchDropdown .suggestBtn svg {
+  stroke: var(--accent-core);
+  flex-shrink: 0;
+}
+
+.headerSearchDropdown .suggestText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.headerSearchDropdown .suggestText strong {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+.headerSearchDropdown .suggestText small {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ---------- Header Temperature Unit Toggle ---------- */
+
+.headerUnitToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.unitSegBtn {
+  padding: 7px 9px;
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 9px;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 48px;
+  letter-spacing: 0.2px;
+}
+
+.unitSegBtn svg {
+  stroke: currentColor;
+}
+
+.unitSegBtn:hover {
+  color: var(--text-body);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.unitSegBtn.active {
+  background: var(--accent-soft);
+  color: #ffffff;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(111, 168, 255, 0.22);
+}
+
+[data-theme="light"] .headerSearchInputWrap {
+  background-color: #212121;
+  border-color: #404040;
+  color: #dcdcdc;
+}
+
+[data-theme="light"] .headerSearchInputWrap input {
+  color: #f0f0f0;
+}
+
+[data-theme="light"] .headerSearchInputWrap input::placeholder {
+  color: #808080;
+}
+
+[data-theme="light"] .headerSearchDropdown {
+  background: rgba(30, 30, 30, 0.97);
+  border-color: #404040;
+}
+
+[data-theme="light"] .headerUnitToggle {
+  background: rgba(30, 30, 30, 0.9);
+  border-color: #404040;
+}
+
+[data-theme="light"] .unitSegBtn {
+  color: #b0b0b0;
+}
+
+[data-theme="light"] .unitSegBtn:hover {
+  color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .unitSegBtn.active {
+  background-color: #ffe08a;
+  border-color: #ffc107;
+  color: #5c4200;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.3),
+    0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+[data-theme="light"] .headerSearchClear,
+[data-theme="light"] .headerSearchClose {
+  color: #a0a0a0;
+}
+
+[data-theme="light"] .headerSearchClear:hover,
+[data-theme="light"] .headerSearchClose:hover {
+  color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .sectionCard {
   border-radius: 22px;
   padding: 22px 24px;
@@ -2013,6 +2265,30 @@ body {
     border-radius: 12px;
   }
 
+  .headerSearchInputWrap {
+    min-width: 160px;
+    max-width: 220px;
+    padding: 9px 10px;
+    gap: 8px;
+  }
+
+  .headerSearchDropdown {
+    min-width: 240px;
+    max-width: 300px;
+  }
+
+  .headerUnitToggle {
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .unitSegBtn {
+    padding: 6px 7px;
+    font-size: 11.5px;
+    min-width: 42px;
+    gap: 3px;
+  }
+
   .weatherInfo h1 {
     font-size: 72px;
   }
@@ -2116,6 +2392,27 @@ body {
   }
 
   .brandTag {
+    display: none;
+  }
+
+  .headerSearchInputWrap {
+    min-width: 120px;
+    max-width: 160px;
+    padding: 8px 9px;
+  }
+
+  .headerSearchDropdown {
+    min-width: 200px;
+    max-width: 260px;
+  }
+
+  .unitSegBtn {
+    min-width: 38px;
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+
+  .unitSegBtn svg {
     display: none;
   }
 
