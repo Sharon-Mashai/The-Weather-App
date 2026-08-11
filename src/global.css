@@ -23,13 +23,7 @@ body,
 /* Light Mode */
 
 [data-theme="light"] body {
-  font-family:
-    "Poppins",
-    system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    sans-serif;
+  font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   background-color: #496b98e1;
   background-size: cover;
   color: #222222;
@@ -47,13 +41,7 @@ body,
 /* Dark Mode */
 
 [data-theme="dark"] body {
-  font-family:
-    "Poppins",
-    system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    sans-serif;
+  font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   background-color: rgb(39, 37, 37);
   color: #ffffff;
   overflow-x: hidden;
@@ -522,7 +510,6 @@ body {
 .weatherIcon img {
   width: 180px;
   max-width: 60vw;
-  filter: drop-shadow(0 20px 40px rgba(255, 170, 60, 0.2));
 }
 
 .weatherInfo {
