@@ -226,18 +226,18 @@ function Header({
             aria-pressed={unit === "C"}
             aria-label="Celsius"
             title="Celsius (°C)"
-          >
-            °C
-          </button>
+
+          >°C</button>
+
           <button
             className={`unitSegBtn ${unit === "F" ? "active" : ""}`}
             onClick={() => onUnitChange?.("F")}
             aria-pressed={unit === "F"}
             aria-label="Fahrenheit"
             title="Fahrenheit (°F)"
-          >
-            °F
-          </button>
+
+          >°F</button>
+          
         </div>
       </div>
     </header>
