@@ -24,7 +24,7 @@ body,
 
 [data-theme="light"] body {
   font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background-color: #496b98e1;
+  background-color: rgb(221, 215, 215);
   background-size: cover;
   color: #222222;
   overflow-x: hidden;
