@@ -45,7 +45,7 @@ export default function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [permissionOpen, setPermissionOpen] = useState(false);
 
-  /* User Settings */
+  /* Settings */
   const [unit, setUnit] = useLocalStorage<TemperatureUnit>("unit", "C");
 
   const [theme, setTheme] = useLocalStorage<"dark" | "light">(

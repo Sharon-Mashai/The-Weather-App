@@ -1,3 +1,4 @@
+
 import type { ForecastData } from "../types/weather";
 import type { TemperatureUnit } from "../utils/weather";
 
@@ -24,15 +25,12 @@ function WeeklyForecast({
   forecast,
   unit,
 }: WeeklyForecastProps) {
-
   const grouped = new Map<string, DailyForecast>();
 
   forecast.list.forEach((item) => {
-
     const date = item.dt_txt.split(" ")[0];
 
     if (!grouped.has(date)) {
-
       grouped.set(date, {
         day: getShortDay(item.dt_txt),
         icon: item.weather[0].icon,
@@ -53,83 +51,51 @@ function WeeklyForecast({
     if (item.pop > existing.pop) {
       existing.pop = item.pop;
     }
-
   });
 
   const dailyForecast = Array.from(grouped.values()).slice(0, 7);
 
   return (
-
     <section className="weeklyForecast">
-
       <div className="forecastList">
-
         {dailyForecast.map((day, index) => (
-
           <div
             className="forecastItem forecastItemExtended"
             key={index}
           >
-
             <div className="dayInfo">
-
               <p className="forecastDay">
                 {day.day}
               </p>
-
             </div>
 
             <div className="dayIconWrap">
-
               <img
                 src={getForecastIcon(day.icon)}
                 alt=""
               />
 
               {day.pop > 0 && (
-
                 <span className="popChip">
-
                   {Math.round(day.pop * 100)}%
-
                 </span>
-
               )}
-
             </div>
 
             <div className="tempRangeWrap">
-
               <span className="tempRangeLow">
-
                 {formatTemperatureShort(day.min, unit)}
-
               </span>
-
-              <div className="tempRangeBar">
-
-                <div className="tempRangeFill" />
-
-              </div>
 
               <span className="tempRangeHigh">
-
                 {formatTemperatureShort(day.max, unit)}
-
               </span>
-
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </section>
-
   );
-
 }
 
 export default WeeklyForecast;
