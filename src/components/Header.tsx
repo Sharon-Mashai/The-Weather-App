@@ -237,7 +237,7 @@ function Header({
             title="Fahrenheit (°F)"
 
           >°F</button>
-          
+
         </div>
       </div>
     </header>
