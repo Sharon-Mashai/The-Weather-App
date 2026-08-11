@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./global.css";
 import Header from "./components/Header";
@@ -8,10 +9,8 @@ import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
 import SearchOverlay from "./components/SearchOverlay";
 import SettingsPanel from "./components/SettingsPanel";
-import LocationsDrawer, {
-  type SavedLocation,
-} from "./components/LocationsDrawer";
-import { ToastStack, type ToastItem, type ToastKind } from "./components/ToastStack";
+import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
+import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
 import Loading from "./components/Loading";
 import LocationPermission from "./components/LocationPermission";
 import { getCurrentWeather, getForecast } from "./services/weatherApi";
@@ -37,7 +36,9 @@ export default function App() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   /* Forecast */
-  const [forecastTab, setForecastTab] = useState<"hourly" | "weekly">("hourly");
+  const [forecastTab, setForecastTab] = useState<"hourly" | "weekly">(
+    "hourly",
+  );
 
   /* Panels */
   const [searchOpen, setSearchOpen] = useState(false);
@@ -53,15 +54,18 @@ export default function App() {
     "dark",
   );
 
-  const [savedLocations, setSavedLocations] = useLocalStorage<SavedLocation[]>(
-    "savedLocations",
-    [],
-  );
+  const [savedLocations, setSavedLocations] = useLocalStorage<
+    SavedLocation[]
+  >("savedLocations", []);
 
   const [activeCity, setActiveCity] = useLocalStorage(
     "activeCity",
     DEFAULT_CITY,
   );
+
+
+  const [searchedLocation, setSearchedLocation] =
+    useState<SavedLocation | null>(null);
 
   const [permissionState, setPermissionState] =
     useLocalStorage<PermissionState>("locationPermission", "prompt");
@@ -200,7 +204,11 @@ export default function App() {
   }, [theme]);
 
   const loadWeatherByCoords = useCallback(
-    async (lat: number, lon: number, cityName?: string): Promise<boolean> => {
+    async (
+      lat: number,
+      lon: number,
+      cityName?: string,
+    ): Promise<boolean> => {
       try {
         setLoading(true);
         setError("");
@@ -440,6 +448,7 @@ export default function App() {
     showCachedWeather,
   ]);
 
+  
   const handleSearchSelect = async (city: {
     name: string;
     country: string;
@@ -448,16 +457,34 @@ export default function App() {
   }) => {
     setSearchOpen(false);
 
-    const success = await loadWeatherByCoords(city.lat, city.lon, city.name);
-
-    if (!success) return;
-
-    const alreadySaved = savedLocations.some(
-      (location) => location.name.toLowerCase() === city.name.toLowerCase(),
+    const success = await loadWeatherByCoords(
+      city.lat,
+      city.lon,
+      city.name,
     );
 
-    if (!alreadySaved) {
-      const currentWeather = await getCurrentWeather(city.lat, city.lon);
+    if (!success) {
+      setSearchedLocation(null);
+      return;
+    }
+
+    const alreadySaved = savedLocations.some(
+      (location) =>
+        location.name.toLowerCase() === city.name.toLowerCase(),
+    );
+
+    /* */
+    if (alreadySaved) {
+      setSearchedLocation(null);
+      return;
+    }
+
+    try {
+      /**/
+      const currentWeather = await getCurrentWeather(
+        city.lat,
+        city.lon,
+      );
 
       const newLocation: SavedLocation = {
         id: crypto.randomUUID(),
@@ -465,27 +492,71 @@ export default function App() {
         country: city.country,
         lat: city.lat,
         lon: city.lon,
-        icon: currentWeather.weather[0].icon,
+        icon: currentWeather.weather[0]?.icon ?? "",
         lastTempC: currentWeather.main.temp,
         updatedAt: Date.now(),
       };
 
-      setSavedLocations([...savedLocations, newLocation]);
-
-      showNotification(`${city.name} saved.`, "success");
+      setSearchedLocation(newLocation);
+    } catch {
+  
+      setSearchedLocation(null);
     }
+  };
+
+
+  const handleSaveLocation = () => {
+    if (!searchedLocation) {
+      return;
+    }
+
+    const alreadySaved = savedLocations.some(
+      (location) =>
+        location.name.toLowerCase() ===
+        searchedLocation.name.toLowerCase(),
+    );
+
+    if (alreadySaved) {
+      showNotification(
+        `${searchedLocation.name} is already saved.`,
+        "info",
+      );
+
+      setSearchedLocation(null);
+      return;
+    }
+
+    setSavedLocations([
+      ...savedLocations,
+      searchedLocation,
+    ]);
+
+    showNotification(
+      `${searchedLocation.name} saved.`,
+      "success",
+    );
+
+    setSearchedLocation(null);
   };
 
   const handleSelectLocation = async (location: SavedLocation) => {
     setDrawerOpen(false);
+    
+    setSearchedLocation(null);
 
-    await loadWeatherByCoords(location.lat, location.lon, location.name);
+    await loadWeatherByCoords(
+      location.lat,
+      location.lon,
+      location.name,
+    );
   };
 
   const handleDeleteLocation = (id: string) => {
     const location = savedLocations.find((item) => item.id === id);
 
-    setSavedLocations(savedLocations.filter((item) => item.id !== id));
+    setSavedLocations(
+      savedLocations.filter((item) => item.id !== id),
+    );
 
     if (location) {
       showNotification(`${location.name} removed.`, "info");
@@ -496,7 +567,10 @@ export default function App() {
     return (
       <div className="app">
         <Loading message="Loading weather..." />
-        <ToastStack toasts={toasts} onDismiss={dismissToast} />
+        <ToastStack
+          toasts={toasts}
+          onDismiss={dismissToast}
+        />
       </div>
     );
   }
@@ -530,15 +604,19 @@ export default function App() {
                       <CurrentWeather
                         weather={weather}
                         unit={unit}
+                        canSaveLocation={searchedLocation !== null}
+                        onSaveLocation={handleSaveLocation}
                       />
 
                       <div className="currentWeatherSummary">
                         <span>
-                          Min {Math.round(weather.main.temp_min)}°{unit}
+                          Min{" "}
+                          {Math.round(weather.main.temp_min)}°{unit}
                         </span>
 
                         <span>
-                          Max {Math.round(weather.main.temp_max)}°{unit}
+                          Max{" "}
+                          {Math.round(weather.main.temp_max)}°{unit}
                         </span>
 
                         <span>
@@ -563,9 +641,15 @@ export default function App() {
                   </div>
 
                   {forecastTab === "hourly" ? (
-                    <HourlyForecast forecast={forecast} unit={unit} />
+                    <HourlyForecast
+                      forecast={forecast}
+                      unit={unit}
+                    />
                   ) : (
-                    <WeeklyForecast forecast={forecast} unit={unit} />
+                    <WeeklyForecast
+                      forecast={forecast}
+                      unit={unit}
+                    />
                   )}
                 </section>
 
@@ -580,10 +664,6 @@ export default function App() {
             )}
           </div>
         </main>
-
-        <footer className="websiteFooter">
-          The WeatherApp · By Mashai Sharon.
-        </footer>
       </div>
 
       <SearchOverlay

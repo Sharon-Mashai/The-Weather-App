@@ -9,7 +9,10 @@
 html,
 body,
 #root {
+  width: 100%;
   min-height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #root {
@@ -120,15 +123,10 @@ body,
 }
 
 body {
-  font-family:
-    "Poppins",
-    system-ui,
-    -apple-system,
-    Segoe UI,
-    Roboto,
-    sans-serif;
+  font-family: "Poppins", system-ui,-apple-system,Segoe UI,Roboto,    sans-serif;
   color: var(--text-body);
   overflow-x: hidden;
+  overflow-y: auto;
   min-height: 100vh;
   display: block;
   padding: 0;
@@ -186,18 +184,6 @@ body {
   position: static;
 }
 
-.websiteFooter {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  border-top: 1px solid var(--hairline-rule);
-  padding: 20px 32px 26px;
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-}
 
 .topNav {
   position: sticky;
