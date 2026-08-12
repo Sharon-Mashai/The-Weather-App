@@ -318,8 +318,6 @@ body {
   font-size: 18px;
 }
 
-/* ---------- Header Search ---------- */
-
 .headerSearchWrap {
   position: relative;
   z-index: 50;
@@ -510,11 +508,9 @@ body {
 }
 
 .unitSegBtn.active {
-  background: var(--accent-soft);
-  color: #ffffff;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18),
-    0 4px 12px rgba(111, 168, 255, 0.22);
+  background: white;
+  color: black;
+  
 }
 
 [data-theme="light"] .headerSearchInputWrap {
@@ -542,7 +538,7 @@ body {
 }
 
 [data-theme="light"] .unitSegBtn {
-  color: #b0b0b0;
+  color: white;
 }
 
 [data-theme="light"] .unitSegBtn:hover {
@@ -551,7 +547,7 @@ body {
 }
 
 [data-theme="light"] .unitSegBtn.active {
-  background-color: #ffe08a;
+  background-color: white;
   border-color: #ffc107;
   color: #5c4200;
   box-shadow:
