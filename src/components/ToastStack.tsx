@@ -34,13 +34,13 @@ export function ToastStack({
   const getIcon = (kind: ToastKind) => {
     switch (kind) {
       case "success":
-        return "✓";
+        return "";
       case "error":
-        return "✕";
+        return "";
       case "warning":
-        return "⚠";
+        return "";
       default:
-        return "ℹ";
+        return "";
     }
   };
 
