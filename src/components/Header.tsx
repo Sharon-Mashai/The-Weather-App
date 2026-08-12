@@ -1,16 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import {HugeiconsIcon} from "@hugeicons/react";
-import {
-  Menu01Icon,
-  Search01Icon,
-  SunCloud02Icon,
-  SaveIcon,
-  Sun01Icon,
-  Moon01Icon,
-  Cancel01Icon,
-  Location01Icon,
-} from "@hugeicons/core-free-icons";
+import {Menu01Icon,Search01Icon,SunCloud02Icon,SaveIcon,Sun01Icon,Moon02Icon,Cancel01Icon,Location01Icon,} from "@hugeicons/core-free-icons";
 import { searchCity } from "../services/weatherApi";
 import type { TemperatureUnit } from "../utils/weather";
 
@@ -192,7 +183,7 @@ function Header({
           {theme === "dark" ? (
             <HugeiconsIcon icon={Sun01Icon} size={22} />
           ) : (
-            <HugeiconsIcon icon={Moon01Icon} size={22} />
+            <HugeiconsIcon icon={Moon02Icon} size={22} />
           )}
         </button>
 
