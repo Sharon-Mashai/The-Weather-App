@@ -57,40 +57,34 @@ function WeeklyForecast({
 
   return (
     <section className="weeklyForecast">
-      <div className="forecastList">
+      <div className="weeklyCards">
         {dailyForecast.map((day, index) => (
           <div
-            className="forecastItem forecastItemExtended"
+            className={`weekCard ${index === 0 ? "todayCard" : ""}`}
             key={index}
           >
-            <div className="dayInfo">
-              <p className="forecastDay">
-                {day.day}
-              </p>
-            </div>
+            <p className="weekLabel">
+              {day.day}
+            </p>
 
-            <div className="dayIconWrap">
-              <img
-                src={getForecastIcon(day.icon)}
-                alt=""
-              />
+            <img
+              src={getForecastIcon(day.icon)}
+              alt=""
+            />
 
-              {day.pop > 0 && (
-                <span className="popChip">
-                  {Math.round(day.pop * 100)}%
-                </span>
-              )}
-            </div>
+            <p className="weekTempHigh">
+              {formatTemperatureShort(day.max, unit)}
+            </p>
 
-            <div className="tempRangeWrap">
-              <span className="tempRangeLow">
-                {formatTemperatureShort(day.min, unit)}
+            <p className="weekTempLow">
+              {formatTemperatureShort(day.min, unit)}
+            </p>
+
+            {day.pop > 0 && (
+              <span className="weekPop">
+                {Math.round(day.pop * 100)}%
               </span>
-
-              <span className="tempRangeHigh">
-                {formatTemperatureShort(day.max, unit)}
-              </span>
-            </div>
+            )}
           </div>
         ))}
       </div>

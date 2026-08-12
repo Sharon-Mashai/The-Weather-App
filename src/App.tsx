@@ -493,34 +493,62 @@ export default function App() {
     }
   };
 
-  const handleSaveLocation = () => {
-    if (!searchedLocation) {
+  const handleSaveLocation = async () => {
+    if (!weather) {
       return;
     }
 
-    const alreadySaved = savedLocations.some(
-      (location) =>
-        location.name.toLowerCase() ===
-        searchedLocation.name.toLowerCase(),
-    );
+    let locationToSave: SavedLocation | null = searchedLocation;
 
-    if (alreadySaved) {
-      showNotification(
-        `${searchedLocation.name} is already saved.`,
-        "info",
+    if (!locationToSave) {
+      const alreadySavedByName = savedLocations.some(
+        (location) =>
+          location.name.toLowerCase() === weather.name.toLowerCase(),
       );
 
-      setSearchedLocation(null);
-      return;
+      if (alreadySavedByName) {
+        showNotification(
+          `${weather.name} is already saved.`,
+          "info",
+        );
+        return;
+      }
+
+      locationToSave = {
+        id: crypto.randomUUID(),
+        name: weather.name,
+        country: weather.sys.country,
+        lat: weather.coord.lat,
+        lon: weather.coord.lon,
+        icon: weather.weather[0]?.icon ?? "",
+        lastTempC: weather.main.temp,
+        updatedAt: Date.now(),
+      };
+    } else {
+      const alreadySaved = savedLocations.some(
+        (location) =>
+          location.name.toLowerCase() ===
+          locationToSave!.name.toLowerCase(),
+      );
+
+      if (alreadySaved) {
+        showNotification(
+          `${locationToSave.name} is already saved.`,
+          "info",
+        );
+
+        setSearchedLocation(null);
+        return;
+      }
     }
 
     setSavedLocations([
       ...savedLocations,
-      searchedLocation,
+      locationToSave,
     ]);
 
     showNotification(
-      `${searchedLocation.name} saved.`,
+      `${locationToSave.name} saved.`,
       "success",
     );
 
@@ -573,7 +601,7 @@ export default function App() {
           country={weather?.sys.country}
           onMenuClick={() => setDrawerOpen(true)}
           onSaveLocationClick={handleSaveLocation}
-          canSaveLocation={searchedLocation !== null}
+          canSaveLocation={weather !== null}
           theme={theme}
           onThemeToggle={() => setTheme(theme === "dark" ? "light" : "dark")}
           unit={unit}
