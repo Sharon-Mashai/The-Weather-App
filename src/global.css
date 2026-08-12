@@ -1023,7 +1023,7 @@ body {
 }
 
 .hourCard:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(49, 47, 47, 0.18);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
