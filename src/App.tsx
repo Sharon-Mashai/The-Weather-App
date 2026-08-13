@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./global.css";
 import Header from "./components/Header";
@@ -7,10 +6,15 @@ import ForecastTabs from "./components/ForecastTabs";
 import HourlyForecast from "./components/HourlyForecast";
 import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
-import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
-import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
+import LocationsDrawer, {
+  type SavedLocation,
+} from "./components/LocationsDrawer";
+import {
+  ToastStack,
+  type ToastItem,
+  type ToastKind,
+} from "./components/ToastStack";
 import Loading from "./components/Loading";
-import LocationPermission from "./components/LocationPermission";
 import { getCurrentWeather, getForecast } from "./services/weatherApi";
 import type { WeatherData, ForecastData } from "./types/weather";
 import { getSevereAlert, type TemperatureUnit } from "./utils/weather";
@@ -22,8 +26,6 @@ const POLOKWANE_COORDS = {
   lat: -26.2041,
   lon: 28.0473,
 };
-
-type PermissionState = "prompt" | "granted" | "denied";
 
 export default function App() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -40,7 +42,6 @@ export default function App() {
 
   /* Panels */
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [permissionOpen, setPermissionOpen] = useState(false);
 
   /* Settings */
   const [unit, setUnit] = useLocalStorage<TemperatureUnit>("unit", "C");
@@ -59,12 +60,8 @@ export default function App() {
     DEFAULT_CITY,
   );
 
-
   const [searchedLocation, setSearchedLocation] =
     useState<SavedLocation | null>(null);
-
-  const [permissionState, setPermissionState] =
-    useLocalStorage<PermissionState>("locationPermission", "prompt");
 
   /* Notifications */
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -308,24 +305,13 @@ export default function App() {
     }
   }, [applyWeatherPayload, readCachedWeatherSnapshot, showCachedWeather]);
 
-  const requestBrowserNotifications = useCallback(async () => {
-    if (typeof window === "undefined" || !("Notification" in window)) {
-      return;
-    }
-
-    if (Notification.permission === "default") {
-      try {
-        await Notification.requestPermission();
-      } catch {
-        // Ignore
-      }
-    }
-  }, []);
-
   const loadCurrentLocation = useCallback(async () => {
     if (!navigator.geolocation) {
       await showDefaultWeather();
-      showNotification("Geolocation is not supported. Using Polokwane.", "info");
+      showNotification(
+        "Geolocation is not supported. Using Polokwane.",
+        "info",
+      );
       return;
     }
 
@@ -368,49 +354,13 @@ export default function App() {
     initializedRef.current = true;
 
     async function initialiseApp() {
-      if (permissionState === "granted") {
-        await loadCurrentLocation();
-        return;
-      }
-
-      const loaded = await loadWeatherByCity(activeCity);
-
-      if (!loaded) {
-        await showDefaultWeather();
-      }
-
-      if (permissionState === "prompt") {
-        setPermissionOpen(true);
-      }
+      await loadCurrentLocation();
     }
 
     window.setTimeout(() => {
       initialiseApp();
     }, 0);
-  }, [permissionState, loadCurrentLocation, showDefaultWeather, loadWeatherByCity, activeCity]);
-
-  const handleAllowLocation = async () => {
-    setPermissionState("granted");
-    setPermissionOpen(false);
-
-    await requestBrowserNotifications();
-    await loadCurrentLocation();
-  };
-
-  const handleDenyLocation = async () => {
-    setPermissionState("denied");
-    setPermissionOpen(false);
-
-    const success = await loadWeatherByCoords(
-      POLOKWANE_COORDS.lat,
-      POLOKWANE_COORDS.lon,
-      "Polokwane",
-    );
-
-    if (success) {
-      showNotification("Using Polokwane as your location.", "info");
-    }
-  };
+  }, [loadCurrentLocation]);
 
   useEffect(() => {
     function handleConnectionChange() {
@@ -557,7 +507,7 @@ export default function App() {
 
   const handleSelectLocation = async (location: SavedLocation) => {
     setDrawerOpen(false);
-    
+
     setSearchedLocation(null);
 
     await loadWeatherByCoords(
@@ -583,6 +533,7 @@ export default function App() {
     return (
       <div className="app">
         <Loading message="Loading weather..." />
+
         <ToastStack
           toasts={toasts}
           onDismiss={dismissToast}
@@ -603,7 +554,9 @@ export default function App() {
           onSaveLocationClick={handleSaveLocation}
           canSaveLocation={weather !== null}
           theme={theme}
-          onThemeToggle={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onThemeToggle={() =>
+            setTheme(theme === "dark" ? "light" : "dark")
+          }
           unit={unit}
           onUnitChange={setUnit}
           onSelectCity={handleSearchSelect}
@@ -699,21 +652,6 @@ export default function App() {
         toasts={toasts}
         onDismiss={dismissToast}
       />
-
-      {permissionOpen && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 999,
-          }}
-        >
-          <LocationPermission
-            onAllow={handleAllowLocation}
-            onDeny={handleDenyLocation}
-          />
-        </div>
-      )}
     </div>
   );
 }

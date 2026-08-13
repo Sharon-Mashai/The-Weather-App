@@ -1,8 +1,5 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Location01Icon,
-  Delete02Icon,
-} from "@hugeicons/core-free-icons";
+import {Location01Icon,Delete02Icon,} from "@hugeicons/core-free-icons";
 
 import type { TemperatureUnit } from "../utils/weather";
 import { formatTempShort } from "../utils/weather";
