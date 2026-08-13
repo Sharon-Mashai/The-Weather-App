@@ -30,13 +30,13 @@ Users should be able to:
 
 ## Preview
 
-![App Preview](src/assets/images/GlowBeauty_Preview.png)
+![Dark Mode](src/assets/darkMode.png)
 
-![After adding the link](src/assets/images/Added_Link.png)
+![Light Mode](src/assets/LightMode.png)
 ### Links
 
-* **Solution URL:** `https://github.com/Sharon-Mashai/`
-* **Live Site URL:** Add your deployed Vercel URL here
+* **Solution URL:** `https://github.com/Sharon-Mashai/The-Weather-App.git`
+* **Live Site URL:** `https://the-weather-6p0e65dv2-sharons-projects-482da55d.vercel.app/`
 
 ---
 
@@ -63,13 +63,13 @@ npm -v
 ### 1. Clone the repository
 
 ```bash
-git clone <your-weather-app-repository-url>
+git clone https://github.com/Sharon-Mashai/The-Weather-App.git
 ```
 
 ### 2. Navigate to the project directory
 
 ```bash
-cd <weather-app-folder>
+cd The-Weather-App
 ```
 
 ### 3. Install dependencies
