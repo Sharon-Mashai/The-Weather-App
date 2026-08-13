@@ -6,14 +6,8 @@ import ForecastTabs from "./components/ForecastTabs";
 import HourlyForecast from "./components/HourlyForecast";
 import WeeklyForecast from "./components/WeeklyForecast";
 import AirConditions from "./components/AirConditions";
-import LocationsDrawer, {
-  type SavedLocation,
-} from "./components/LocationsDrawer";
-import {
-  ToastStack,
-  type ToastItem,
-  type ToastKind,
-} from "./components/ToastStack";
+import LocationsDrawer, {type SavedLocation,} from "./components/LocationsDrawer";
+import {ToastStack,type ToastItem,type ToastKind,} from "./components/ToastStack";
 import Loading from "./components/Loading";
 import { getCurrentWeather, getForecast } from "./services/weatherApi";
 import type { WeatherData, ForecastData } from "./types/weather";
